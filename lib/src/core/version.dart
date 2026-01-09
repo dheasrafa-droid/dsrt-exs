@@ -33,13 +33,13 @@ class _Version {
   final String copyright = 'Copyright © 2024 DSRT Engine Team';
 
   /// Engine repository URL.
-  final String repository = 'https://github.com/dsrt-engine/dsrt-engine';
+  final String repository = 'https://github.com/dheasrafa-droid/dsrt-exs';
 
   /// Engine documentation URL.
-  final String documentation = 'https://docs.dsrt-engine.dev';
+  final String documentation = 'https://docs.dsrt-exs.dev';
 
   /// Engine support URL.
-  final String support = 'https://support.dsrt-engine.dev';
+  final String support = 'https://support.dsrt-exs.dev';
 
   /// Default constructor for internal version manager.
   /// 
