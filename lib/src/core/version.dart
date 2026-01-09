@@ -32,14 +32,17 @@ class _Version {
   /// Engine copyright.
   final String copyright = 'Copyright © 2024 DSRT Engine Team';
 
-  /// Engine repository URL.
+  /// Engine repository URL (GitHub).
   final String repository = 'https://github.com/dheasrafa-droid/dsrt-exs';
 
-  /// Engine documentation URL.
-  final String documentation = 'https://docs.dsrt-exs.dev';
+  /// Engine documentation URL (deployed on Vercel).
+  final String documentation = 'https://dsrt-exs.vercel.app/docs';
 
-  /// Engine support URL.
-  final String support = 'https://support.dsrt-exs.dev';
+  /// Engine main website URL (deployed on Vercel).
+  final String website = 'https://dsrt-exs.vercel.app';
+
+  /// Engine support/contact URL.
+  final String support = 'https://dsrt-exs.vercel.app/support';
 
   /// Default constructor for internal version manager.
   /// 
@@ -447,6 +450,7 @@ class _Version {
       'copyright': copyright,
       'repository': repository,
       'documentation': documentation,
+      'website': website,
       'support': support,
       'isStable': isStable(),
       'isDevelopment': isDevelopment(),
@@ -566,6 +570,13 @@ class _Version {
   /// Returns the URL to the changelog for this version.
   String getChangelogUrl() {
     return '$repository/releases/tag/v${getCoreVersionString()}';
+  }
+
+  /// Gets the release notes URL on Vercel deployment.
+  /// 
+  /// Returns the URL to the release notes for this version.
+  String getReleaseNotesUrl() {
+    return '$website/releases/v${getCoreVersionString()}';
   }
 
   /// Checks if an update is available.
