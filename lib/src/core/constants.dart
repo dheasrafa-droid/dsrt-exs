@@ -1,734 +1,666 @@
-/// Core constants and configuration values for DSRT Engine.
+// lib/src/core/constants.dart
+
+/// DSRT Engine - Core Constants
 /// 
-/// These values define engine behavior, limits, and default configurations.
-/// Not intended for public modification.
+/// This file contains all global constants used throughout the DSRT Engine.
+/// These constants are immutable and should not be modified at runtime.
 /// 
-/// [DSRT]: Dart Spatial Rendering Technology
+/// @category Core
+/// @version 1.0.0
+/// @license MIT
+/// @copyright DSRT Engine Team
+
+library dsrt_engine.core.constants;
+
+/// DSRT Engine identification constants
+class DsrtConstants {
+  /// Engine name
+  static const String ENGINE_NAME = 'DSRT Engine';
+  
+  /// Engine version (major.minor.patch)
+  static const String ENGINE_VERSION = '1.0.0';
+  
+  /// Engine version code
+  static const int ENGINE_VERSION_CODE = 10000;
+  
+  /// Engine build identifier
+  static const String ENGINE_BUILD = 'alpha.2024.01';
+  
+  /// Engine vendor
+  static const String ENGINE_VENDOR = 'DSRT Engine Team';
+  
+  /// Engine website
+  static const String ENGINE_WEBSITE = 'https://dsrt-engine.dev';
+  
+  /// Engine documentation URL
+  static const String ENGINE_DOCS = 'https://docs.dsrt-engine.dev';
+  
+  /// Engine repository URL
+  static const String ENGINE_REPO = 'https://github.com/dsrt-engine/dsrt';
+  
+  /// Engine license
+  static const String ENGINE_LICENSE = 'MIT License';
+  
+  /// Engine copyright
+  static const String ENGINE_COPYRIGHT = 'Copyright (c) 2024 DSRT Engine Team';
+  
+  /// Engine description
+  static const String ENGINE_DESCRIPTION = 
+      'A high-performance, modular 3D engine built with Dart for multi-platform applications.';
+}
+
+/// Mathematical constants with high precision
+class DsrtMathConstants {
+  /// Pi constant (π)
+  static const double PI = 3.14159265358979323846;
+  
+  /// Tau constant (τ = 2π)
+  static const double TAU = 6.28318530717958647692;
+  
+  /// Pi over 2 (π/2)
+  static const double HALF_PI = 1.57079632679489661923;
+  
+  /// Pi over 4 (π/4)
+  static const double QUARTER_PI = 0.78539816339744830962;
+  
+  /// Two times Pi (2π)
+  static const double TWO_PI = 6.28318530717958647692;
+  
+  /// Inverse of Pi (1/π)
+  static const double INV_PI = 0.31830988618379067154;
+  
+  /// Inverse of Tau (1/τ)
+  static const double INV_TAU = 0.15915494309189533577;
+  
+  /// Degree to Radian conversion factor (π/180)
+  static const double DEG_TO_RAD = 0.01745329251994329577;
+  
+  /// Radian to Degree conversion factor (180/π)
+  static const double RAD_TO_DEG = 57.2957795130823208768;
+  
+  /// Euler's number (e)
+  static const double E = 2.71828182845904523536;
+  
+  /// Natural logarithm of 2 (ln2)
+  static const double LN2 = 0.69314718055994530942;
+  
+  /// Natural logarithm of 10 (ln10)
+  static const double LN10 = 2.30258509299404568402;
+  
+  /// Base 2 logarithm of e (log2(e))
+  static const double LOG2E = 1.44269504088896340736;
+  
+  /// Base 10 logarithm of e (log10(e))
+  static const double LOG10E = 0.43429448190325182765;
+  
+  /// Square root of 2 (√2)
+  static const double SQRT2 = 1.41421356237309504880;
+  
+  /// Square root of 1/2 (√½)
+  static const double SQRT_HALF = 0.70710678118654752440;
+  
+  /// Square root of 3 (√3)
+  static const double SQRT3 = 1.73205080756887729353;
+  
+  /// Square root of 5 (√5)
+  static const double SQRT5 = 2.23606797749978969641;
+  
+  /// Golden ratio (φ)
+  static const double PHI = 1.61803398874989484820;
+  
+  /// Machine epsilon for double precision
+  static const double EPSILON = 1e-15;
+  
+  /// Small epsilon value for floating point comparisons
+  static const double EPSILON_SMALL = 1e-9;
+  
+  /// Large epsilon value for floating point comparisons
+  static const double EPSILON_LARGE = 1e-6;
+  
+  /// Maximum safe integer for double precision
+  static const double MAX_SAFE_INTEGER = 9007199254740991.0;
+  
+  /// Minimum safe integer for double precision
+  static const double MIN_SAFE_INTEGER = -9007199254740991.0;
+}
+
+/// Rendering and graphics constants
+class DsrtGraphicsConstants {
+  /// Default canvas width
+  static const int DEFAULT_CANVAS_WIDTH = 800;
+  
+  /// Default canvas height
+  static const int DEFAULT_CANVAS_HEIGHT = 600;
+  
+  /// Default background color (black)
+  static const int DEFAULT_BACKGROUND_COLOR = 0xFF000000;
+  
+  /// Default clear color (transparent black)
+  static const int DEFAULT_CLEAR_COLOR = 0x00000000;
+  
+  /// Default clear depth value
+  static const double DEFAULT_CLEAR_DEPTH = 1.0;
+  
+  /// Default clear stencil value
+  static const int DEFAULT_CLEAR_STENCIL = 0;
+  
+  /// Default near clipping plane
+  static const double DEFAULT_NEAR = 0.1;
+  
+  /// Default far clipping plane
+  static const double DEFAULT_FAR = 1000.0;
+  
+  /// Default field of view (in degrees)
+  static const double DEFAULT_FOV = 60.0;
+  
+  /// Default aspect ratio
+  static const double DEFAULT_ASPECT = 4.0 / 3.0;
+  
+  /// Default render target size
+  static const int DEFAULT_RENDER_TARGET_SIZE = 512;
+  
+  /// Maximum texture size (conservative estimate)
+  static const int MAX_TEXTURE_SIZE = 4096;
+  
+  /// Maximum cube map size
+  static const int MAX_CUBE_MAP_SIZE = 2048;
+  
+  /// Maximum render buffer size
+  static const int MAX_RENDER_BUFFER_SIZE = 8192;
+  
+  /// Maximum anisotropy level
+  static const int MAX_ANISOTROPY = 16;
+  
+  /// Maximum mipmap levels
+  static const int MAX_MIPMAP_LEVELS = 16;
+  
+  /// Default antialiasing samples
+  static const int DEFAULT_ANTIALIAS_SAMPLES = 4;
+  
+  /// Default shadow map size
+  static const int DEFAULT_SHADOW_MAP_SIZE = 1024;
+  
+  /// Default light map size
+  static const int DEFAULT_LIGHT_MAP_SIZE = 512;
+  
+  /// Default environment map size
+  static const int DEFAULT_ENV_MAP_SIZE = 256;
+}
+
+/// Physics and simulation constants
+class DsrtPhysicsConstants {
+  /// Default gravity (Earth gravity in m/s²)
+  static const double DEFAULT_GRAVITY = 9.81;
+  
+  /// Default physics time step (60 FPS)
+  static const double DEFAULT_TIME_STEP = 1.0 / 60.0;
+  
+  /// Default physics sub-steps
+  static const int DEFAULT_SUB_STEPS = 1;
+  
+  /// Default solver iterations
+  static const int DEFAULT_SOLVER_ITERATIONS = 10;
+  
+  /// Default collision margin
+  static const double DEFAULT_COLLISION_MARGIN = 0.04;
+  
+  /// Default restitution (bounciness)
+  static const double DEFAULT_RESTITUTION = 0.0;
+  
+  /// Default friction coefficient
+  static const double DEFAULT_FRICTION = 0.5;
+  
+  /// Default linear damping
+  static const double DEFAULT_LINEAR_DAMPING = 0.01;
+  
+  /// Default angular damping
+  static const double DEFAULT_ANGULAR_DAMPING = 0.01;
+  
+  /// Default sleep threshold
+  static const double DEFAULT_SLEEP_THRESHOLD = 0.8;
+  
+  /// Default contact processing threshold
+  static const double DEFAULT_CONTACT_THRESHOLD = 0.02;
+  
+  /// Maximum linear velocity
+  static const double MAX_LINEAR_VELOCITY = 1000.0;
+  
+  /// Maximum angular velocity
+  static const double MAX_ANGULAR_VELOCITY = 100.0;
+  
+  /// Default CCD (Continuous Collision Detection) margin
+  static const double DEFAULT_CCD_MARGIN = 0.01;
+}
+
+/// Audio and sound constants
+class DsrtAudioConstants {
+  /// Default sample rate
+  static const int DEFAULT_SAMPLE_RATE = 44100;
+  
+  /// Default channels (stereo)
+  static const int DEFAULT_CHANNELS = 2;
+  
+  /// Default bit depth
+  static const int DEFAULT_BIT_DEPTH = 16;
+  
+  /// Default buffer size
+  static const int DEFAULT_BUFFER_SIZE = 4096;
+  
+  /// Default listener distance model
+  static const String DEFAULT_DISTANCE_MODEL = 'inverse';
+  
+  /// Default speed of sound (m/s)
+  static const double DEFAULT_SPEED_OF_SOUND = 343.0;
+  
+  /// Default doppler factor
+  static const double DEFAULT_DOPPLER_FACTOR = 1.0;
+  
+  /// Default rolloff factor
+  static const double DEFAULT_ROLLOFF_FACTOR = 1.0;
+  
+  /// Default reference distance
+  static const double DEFAULT_REFERENCE_DISTANCE = 1.0;
+  
+  /// Default max distance
+  static const double DEFAULT_MAX_DISTANCE = 10000.0;
+  
+  /// Default master volume
+  static const double DEFAULT_MASTER_VOLUME = 1.0;
+  
+  /// Minimum volume (muted)
+  static const double MIN_VOLUME = 0.0;
+  
+  /// Maximum volume
+  static const double MAX_VOLUME = 1.0;
+  
+  /// Default panning value (center)
+  static const double DEFAULT_PAN = 0.0;
+}
+
+/// Animation and timing constants
+class DsrtAnimationConstants {
+  /// Default animation frame rate (FPS)
+  static const double DEFAULT_FRAME_RATE = 60.0;
+  
+  /// Default animation duration (seconds)
+  static const double DEFAULT_DURATION = 1.0;
+  
+  /// Default animation start time
+  static const double DEFAULT_START_TIME = 0.0;
+  
+  /// Default animation end time
+  static const double DEFAULT_END_TIME = 1.0;
+  
+  /// Default animation time scale
+  static const double DEFAULT_TIME_SCALE = 1.0;
+  
+  /// Default blending duration
+  static const double DEFAULT_BLEND_DURATION = 0.2;
+  
+  /// Default interpolation mode
+  static const String DEFAULT_INTERPOLATION = 'linear';
+  
+  /// Default wrap mode
+  static const String DEFAULT_WRAP_MODE = 'clamp';
+  
+  /// Maximum bone count per skeleton
+  static const int MAX_BONES = 256;
+  
+  /// Maximum morph target count
+  static const int MAX_MORPH_TARGETS = 16;
+  
+  /// Maximum blend shape count
+  static const int MAX_BLEND_SHAPES = 8;
+  
+  /// Default keyframe tolerance
+  static const double DEFAULT_KEYFRAME_TOLERANCE = 0.001;
+}
+
+/// Memory and performance constants
+class DsrtMemoryConstants {
+  /// Default memory pool size (bytes)
+  static const int DEFAULT_MEMORY_POOL_SIZE = 64 * 1024 * 1024; // 64MB
+  
+  /// Default geometry pool size
+  static const int DEFAULT_GEOMETRY_POOL_SIZE = 16 * 1024 * 1024; // 16MB
+  
+  /// Default texture pool size
+  static const int DEFAULT_TEXTURE_POOL_SIZE = 32 * 1024 * 1024; // 32MB
+  
+  /// Default shader pool size
+  static const int DEFAULT_SHADER_POOL_SIZE = 4 * 1024 * 1024; // 4MB
+  
+  /// Default buffer alignment
+  static const int DEFAULT_BUFFER_ALIGNMENT = 16;
+  
+  /// Default cache size for objects
+  static const int DEFAULT_OBJECT_CACHE_SIZE = 1024;
+  
+  /// Default cache size for materials
+  static const int DEFAULT_MATERIAL_CACHE_SIZE = 256;
+  
+  /// Default cache size for textures
+  static const int DEFAULT_TEXTURE_CACHE_SIZE = 128;
+  
+  /// Default cache size for shaders
+  static const int DEFAULT_SHADER_CACHE_SIZE = 64;
+  
+  /// Maximum vertices per geometry
+  static const int MAX_VERTICES_PER_GEOMETRY = 65536;
+  
+  /// Maximum indices per geometry
+  static const int MAX_INDICES_PER_GEOMETRY = 65536 * 3;
+  
+  /// Maximum uniforms per shader
+  static const int MAX_UNIFORMS_PER_SHADER = 256;
+  
+  /// Maximum attributes per geometry
+  static const int MAX_ATTRIBUTES_PER_GEOMETRY = 16;
+  
+  /// Maximum texture units
+  static const int MAX_TEXTURE_UNITS = 16;
+}
+
+/// Platform and compatibility constants
+class DsrtPlatformConstants {
+  /// WebGL 1.0 identifier
+  static const String WEBGL1 = 'webgl';
+  
+  /// WebGL 2.0 identifier
+  static const String WEBGL2 = 'webgl2';
+  
+  /// WebGPU identifier
+  static const String WEBGPU = 'webgpu';
+  
+  /// Canvas 2D identifier
+  static const String CANVAS2D = '2d';
+  
+  /// SVG renderer identifier
+  static const String SVG = 'svg';
+  
+  /// CSS 3D renderer identifier
+  static const String CSS3D = 'css3d';
+  
+  /// Software renderer identifier
+  static const String SOFTWARE = 'software';
+  
+  /// Default renderer type
+  static const String DEFAULT_RENDERER = WEBGL2;
+  
+  /// Minimum WebGL version required
+  static const int MIN_WEBGL_VERSION = 1;
+  
+  /// Minimum WebGL 2 version required
+  static const int MIN_WEBGL2_VERSION = 2;
+  
+  /// Default precision for shaders
+  static const String DEFAULT_PRECISION = 'highp';
+  
+  /// Fallback precision for mobile
+  static const String FALLBACK_PRECISION = 'mediump';
+  
+  /// Low precision for compatibility
+  static const String LOW_PRECISION = 'lowp';
+  
+  /// Default extension requirements
+  static const List<String> DEFAULT_EXTENSIONS = [
+    'OES_texture_float',
+    'OES_texture_float_linear',
+    'OES_standard_derivatives',
+    'EXT_shader_texture_lod',
+    'WEBGL_depth_texture',
+    'OES_element_index_uint',
+  ];
+}
+
+/// Error and validation constants
+class DsrtErrorConstants {
+  /// Success code (no error)
+  static const int SUCCESS = 0;
+  
+  /// Generic error code
+  static const int ERROR_GENERIC = -1;
+  
+  /// Initialization error
+  static const int ERROR_INITIALIZATION = -100;
+  
+  /// Resource loading error
+  static const int ERROR_RESOURCE_LOADING = -200;
+  
+  /// Graphics context error
+  static const int ERROR_GRAPHICS_CONTEXT = -300;
+  
+  /// Shader compilation error
+  static const int ERROR_SHADER_COMPILATION = -400;
+  
+  /// Memory allocation error
+  static const int ERROR_MEMORY_ALLOCATION = -500;
+  
+  /// Parameter validation error
+  static const int ERROR_VALIDATION = -600;
+  
+  /// File system error
+  static const int ERROR_FILE_SYSTEM = -700;
+  
+  /// Network error
+  static const int ERROR_NETWORK = -800;
+  
+  /// Platform unsupported error
+  static const int ERROR_PLATFORM_UNSUPPORTED = -900;
+  
+  /// Feature unsupported error
+  static const int ERROR_FEATURE_UNSUPPORTED = -1000;
+  
+  /// Maximum error message length
+  static const int MAX_ERROR_MESSAGE_LENGTH = 1024;
+  
+  /// Default error message
+  static const String DEFAULT_ERROR_MESSAGE = 'An unknown error occurred';
+  
+  /// Validation failed message
+  static const String VALIDATION_FAILED = 'Validation failed';
+  
+  /// Resource not found message
+  static const String RESOURCE_NOT_FOUND = 'Resource not found';
+  
+  /// Context lost message
+  static const String CONTEXT_LOST = 'Graphics context lost';
+  
+  /// Out of memory message
+  static const String OUT_OF_MEMORY = 'Out of memory';
+  
+  /// Timeout message
+  static const String TIMEOUT = 'Operation timed out';
+}
+
+/// Input and interaction constants
+class DsrtInputConstants {
+  /// Default mouse sensitivity
+  static const double DEFAULT_MOUSE_SENSITIVITY = 1.0;
+  
+  /// Default touch sensitivity
+  static const double DEFAULT_TOUCH_SENSITIVITY = 1.0;
+  
+  /// Default gamepad deadzone
+  static const double DEFAULT_GAMEPAD_DEADZONE = 0.1;
+  
+  /// Default gamepad sensitivity
+  static const double DEFAULT_GAMEPAD_SENSITIVITY = 1.0;
+  
+  /// Default double-click interval (ms)
+  static const int DEFAULT_DOUBLE_CLICK_INTERVAL = 500;
+  
+  /// Default long-press duration (ms)
+  static const int DEFAULT_LONG_PRESS_DURATION = 1000;
+  
+  /// Default drag threshold (pixels)
+  static const double DEFAULT_DRAG_THRESHOLD = 5.0;
+  
+  /// Default scroll sensitivity
+  static const double DEFAULT_SCROLL_SENSITIVITY = 1.0;
+  
+  /// Maximum touch points
+  static const int MAX_TOUCH_POINTS = 10;
+  
+  /// Maximum gamepad count
+  static const int MAX_GAMEPADS = 4;
+  
+  /// Maximum buttons per gamepad
+  static const int MAX_GAMEPAD_BUTTONS = 20;
+  
+  /// Maximum axes per gamepad
+  static const int MAX_GAMEPAD_AXES = 10;
+}
+
+/// Default values for various engine components
+class DsrtDefaultValues {
+  /// Default material color (white)
+  static const int DEFAULT_MATERIAL_COLOR = 0xFFFFFFFF;
+  
+  /// Default material opacity
+  static const double DEFAULT_MATERIAL_OPACITY = 1.0;
+  
+  /// Default material roughness
+  static const double DEFAULT_MATERIAL_ROUGHNESS = 0.5;
+  
+  /// Default material metalness
+  static const double DEFAULT_MATERIAL_METALNESS = 0.0;
+  
+  /// Default material emissive intensity
+  static const double DEFAULT_MATERIAL_EMISSIVE_INTENSITY = 1.0;
+  
+  /// Default material normal scale
+  static const double DEFAULT_MATERIAL_NORMAL_SCALE = 1.0;
+  
+  /// Default material displacement scale
+  static const double DEFAULT_MATERIAL_DISPLACEMENT_SCALE = 1.0;
+  
+  /// Default material ambient occlusion strength
+  static const double DEFAULT_MATERIAL_AO_STRENGTH = 1.0;
+  
+  /// Default light color (white)
+  static const int DEFAULT_LIGHT_COLOR = 0xFFFFFF;
+  
+  /// Default light intensity
+  static const double DEFAULT_LIGHT_INTENSITY = 1.0;
+  
+  /// Default light distance
+  static const double DEFAULT_LIGHT_DISTANCE = 100.0;
+  
+  /// Default light angle
+  static const double DEFAULT_LIGHT_ANGLE = Math.PI / 3.0;
+  
+  /// Default light penumbra
+  static const double DEFAULT_LIGHT_PENUMBRA = 0.0;
+  
+  /// Default light decay
+  static const double DEFAULT_LIGHT_DECAY = 2.0;
+  
+  /// Default camera zoom
+  static const double DEFAULT_CAMERA_ZOOM = 1.0;
+  
+  /// Default camera rotation speed
+  static const double DEFAULT_CAMERA_ROTATION_SPEED = 1.0;
+  
+  /// Default camera pan speed
+  static const double DEFAULT_CAMERA_PAN_SPEED = 1.0;
+  
+  /// Default camera zoom speed
+  static const double DEFAULT_CAMERA_ZOOM_SPEED = 1.0;
+  
+  /// Default camera min distance
+  static const double DEFAULT_CAMERA_MIN_DISTANCE = 0.1;
+  
+  /// Default camera max distance
+  static const double DEFAULT_CAMERA_MAX_DISTANCE = 1000.0;
+  
+  /// Default camera min zoom
+  static const double DEFAULT_CAMERA_MIN_ZOOM = 0.1;
+  
+  /// Default camera max zoom
+  static const double DEFAULT_CAMERA_MAX_ZOOM = 10.0;
+  
+  /// Default camera min polar angle (degrees)
+  static const double DEFAULT_CAMERA_MIN_POLAR_ANGLE = 0.0;
+  
+  /// Default camera max polar angle (degrees)
+  static const double DEFAULT_CAMERA_MAX_POLAR_ANGLE = 180.0;
+  
+  /// Default camera min azimuth angle (degrees)
+  static const double DEFAULT_CAMERA_MIN_AZIMUTH_ANGLE = -180.0;
+  
+  /// Default camera max azimuth angle (degrees)
+  static const double DEFAULT_CAMERA_MAX_AZIMUTH_ANGLE = 180.0;
+  
+  /// Default camera damping factor
+  static const double DEFAULT_CAMERA_DAMPING = 0.25;
+  
+  /// Default camera enable damping
+  static const bool DEFAULT_CAMERA_ENABLE_DAMPING = true;
+  
+  /// Default camera enable zoom
+  static const bool DEFAULT_CAMERA_ENABLE_ZOOM = true;
+  
+  /// Default camera enable rotate
+  static const bool DEFAULT_CAMERA_ENABLE_ROTATE = true;
+  
+  /// Default camera enable pan
+  static const bool DEFAULT_CAMERA_ENABLE_PAN = true;
+  
+  /// Default camera screen space panning
+  static const bool DEFAULT_CAMERA_SCREEN_SPACE_PANNING = false;
+  
+  /// Default camera key pan speed
+  static const double DEFAULT_CAMERA_KEY_PAN_SPEED = 7.0;
+  
+  /// Default camera auto rotate
+  static const bool DEFAULT_CAMERA_AUTO_ROTATE = false;
+  
+  /// Default camera auto rotate speed
+  static const double DEFAULT_CAMERA_AUTO_ROTATE_SPEED = 2.0;
+}
+
+/// Utility class for math operations
+class Math {
+  /// Pi constant from DsrtMathConstants
+  static const double PI = DsrtMathConstants.PI;
+}
+
+/// Main constants export class
 /// 
-/// @internal - Core engine internals
-library dsrt.core.constants;
-
-/// Engine precision constant for floating-point comparisons
-const double dsrtEpsilon = 1e-6;
-
-/// Maximum number of directional lights supported per scene
-const int dsrtMaxDirectionalLights = 4;
-
-/// Maximum number of point lights supported per scene
-const int dsrtMaxPointLights = 8;
-
-/// Maximum number of spot lights supported per scene
-const int dsrtMaxSpotLights = 4;
-
-/// Maximum number of bones per skeleton for skinning
-const int dsrtMaxBonesPerSkeleton = 128;
-
-/// Default animation frame rate in frames per second
-const double dsrtDefaultFrameRate = 60.0;
-
-/// Maximum supported texture size in pixels
-const int dsrtMaxTextureSize = 8192;
-
-/// Maximum number of vertices per geometry buffer
-const int dsrtMaxVerticesPerBuffer = 65536;
-
-/// Maximum number of indices per geometry buffer
-const int dsrtMaxIndicesPerBuffer = 131072;
-
-/// Default near clipping plane distance for cameras
-const double dsrtDefaultCameraNear = 0.1;
-
-/// Default far clipping plane distance for cameras
-const double dsrtDefaultCameraFar = 2000.0;
-
-/// Default field of view for perspective cameras in degrees
-const double dsrtDefaultPerspectiveFOV = 60.0;
-
-/// Default orthographic camera size
-const double dsrtDefaultOrthographicSize = 5.0;
-
-/// Default render target width in pixels
-const int dsrtDefaultRenderWidth = 1024;
-
-/// Default render target height in pixels
-const int dsrtDefaultRenderHeight = 768;
-
-/// Maximum number of render targets in a framebuffer
-const int dsrtMaxRenderTargets = 8;
-
-/// Maximum number of texture units available
-const int dsrtMaxTextureUnits = 16;
-
-/// Maximum number of uniform buffer binding points
-const int dsrtMaxUniformBufferBindings = 12;
-
-/// Maximum number of vertex attributes per shader
-const int dsrtMaxVertexAttributes = 16;
-
-/// Default clear color (RGBA)
-const List<double> dsrtDefaultClearColor = [0.0, 0.0, 0.0, 1.0];
-
-/// Default clear depth value
-const double dsrtDefaultClearDepth = 1.0;
-
-/// Default clear stencil value
-const int dsrtDefaultClearStencil = 0;
-
-/// Size of a single matrix in bytes (4x4 float matrix)
-const int dsrtMatrixByteSize = 64;
-
-/// Size of a single vector4 in bytes
-const int dsrtVector4ByteSize = 16;
-
-/// Size of a single vector3 in bytes
-const int dsrtVector3ByteSize = 12;
-
-/// Size of a single vector2 in bytes
-const int dsrtVector2ByteSize = 8;
-
-/// Maximum mipmap levels for textures
-const int dsrtMaxMipmapLevels = 12;
-
-/// Default anisotropy level for texture filtering
-const double dsrtDefaultAnisotropy = 4.0;
-
-/// Default gamma correction value
-const double dsrtDefaultGamma = 2.2;
-
-/// Default exposure value for tone mapping
-const double dsrtDefaultExposure = 1.0;
-
-/// Default white point for tone mapping
-const double dsrtDefaultWhitePoint = 1.0;
-
-/// Default ambient light intensity
-const double dsrtDefaultAmbientIntensity = 0.1;
-
-/// Default directional light intensity
-const double dsrtDefaultDirectionalIntensity = 1.0;
-
-/// Default point light intensity
-const double dsrtDefaultPointIntensity = 1.0;
-
-/// Default spot light intensity
-const double dsrtDefaultSpotIntensity = 1.0;
-
-/// Default shadow bias value
-const double dsrtDefaultShadowBias = 0.001;
-
-/// Default shadow normal bias value
-const double dsrtDefaultShadowNormalBias = 0.001;
-
-/// Default shadow map size
-const int dsrtDefaultShadowMapSize = 1024;
-
-/// Default bloom threshold
-const double dsrtDefaultBloomThreshold = 0.8;
-
-/// Default bloom intensity
-const double dsrtDefaultBloomIntensity = 0.5;
-
-/// Default bloom radius
-const double dsrtDefaultBloomRadius = 0.5;
-
-/// Default SSAO radius
-const double dsrtDefaultSSAORadius = 0.5;
-
-/// Default SSAO intensity
-const double dsrtDefaultSSAOIntensity = 1.0;
-
-/// Default SSAO bias
-const double dsrtDefaultSSAOBias = 0.025;
-
-/// Default FXAA quality
-const double dsrtDefaultFXAAQuality = 0.25;
-
-/// Default motion blur samples
-const int dsrtDefaultMotionBlurSamples = 16;
-
-/// Default motion blur intensity
-const double dsrtDefaultMotionBlurIntensity = 0.5;
-
-/// Default depth of field focus distance
-const double dsrtDefaultDOFFocusDistance = 10.0;
-
-/// Default depth of field aperture
-const double dsrtDefaultDOFAperture = 0.1;
-
-/// Default depth of field max blur
-const double dsrtDefaultDOFMaxBlur = 0.02;
-
-/// Shader precision qualifier for high precision
-const String dsrtShaderPrecisionHighp = 'highp';
-
-/// Shader precision qualifier for medium precision
-const String dsrtShaderPrecisionMediump = 'mediump';
-
-/// Shader precision qualifier for low precision
-const String dsrtShaderPrecisionLowp = 'lowp';
-
-/// Shader attribute location for position
-const int dsrtShaderAttributePosition = 0;
-
-/// Shader attribute location for normal
-const int dsrtShaderAttributeNormal = 1;
-
-/// Shader attribute location for uv
-const int dsrtShaderAttributeUV = 2;
-
-/// Shader attribute location for color
-const int dsrtShaderAttributeColor = 3;
-
-/// Shader attribute location for tangent
-const int dsrtShaderAttributeTangent = 4;
-
-/// Shader attribute location for bitangent
-const int dsrtShaderAttributeBitangent = 5;
-
-/// Shader attribute location for bone indices
-const int dsrtShaderAttributeBoneIndices = 6;
-
-/// Shader attribute location for bone weights
-const int dsrtShaderAttributeBoneWeights = 7;
-
-/// Shader attribute location for instance matrix
-const int dsrtShaderAttributeInstanceMatrix = 8;
-
-/// Shader attribute location for instance color
-const int dsrtShaderAttributeInstanceColor = 12;
-
-/// Shader uniform location for model matrix
-const String dsrtShaderUniformModelMatrix = 'uModelMatrix';
-
-/// Shader uniform location for view matrix
-const String dsrtShaderUniformViewMatrix = 'uViewMatrix';
-
-/// Shader uniform location for projection matrix
-const String dsrtShaderUniformProjectionMatrix = 'uProjectionMatrix';
-
-/// Shader uniform location for normal matrix
-const String dsrtShaderUniformNormalMatrix = 'uNormalMatrix';
-
-/// Shader uniform location for camera position
-const String dsrtShaderUniformCameraPosition = 'uCameraPosition';
-
-/// Shader uniform location for ambient light color
-const String dsrtShaderUniformAmbientLightColor = 'uAmbientLightColor';
-
-/// Shader uniform location for directional lights
-const String dsrtShaderUniformDirectionalLights = 'uDirectionalLights';
-
-/// Shader uniform location for point lights
-const String dsrtShaderUniformPointLights = 'uPointLights';
-
-/// Shader uniform location for spot lights
-const String dsrtShaderUniformSpotLights = 'uSpotLights';
-
-/// Shader uniform location for shadow maps
-const String dsrtShaderUniformShadowMaps = 'uShadowMaps';
-
-/// Shader uniform location for shadow matrices
-const String dsrtShaderUniformShadowMatrices = 'uShadowMatrices';
-
-/// Shader uniform location for time
-const String dsrtShaderUniformTime = 'uTime';
-
-/// Shader uniform location for delta time
-const String dsrtShaderUniformDeltaTime = 'uDeltaTime';
-
-/// Shader uniform location for resolution
-const String dsrtShaderUniformResolution = 'uResolution';
-
-/// Shader uniform location for mouse position
-const String dsrtShaderUniformMousePosition = 'uMousePosition';
-
-/// Engine identifier string
-const String dsrtEngineIdentifier = 'DSRT Engine';
-
-/// Engine version string
-const String dsrtEngineVersion = '0.1.0';
-
-/// Engine build timestamp
-const String dsrtEngineBuildTimestamp = '2024-01-15T12:00:00Z';
-
-/// Engine copyright notice
-const String dsrtEngineCopyright = '© 2024 DSRT Engine. All rights reserved.';
-
-/// Engine license information
-const String dsrtEngineLicense = 'MIT License';
-
-/// Engine repository URL
-const String dsrtEngineRepository = 'https://github.com/dheasrafa-droid/dsrt-exs';
-
-/// Engine documentation URL
-const String dsrtEngineDocumentation = 'https://dsrt-exs.vercel.app/docs';
-
-/// Engine support email
-const String dsrtEngineSupportEmail = 'support@dsrt-engine.com';
-
-/// Default scene name
-const String dsrtDefaultSceneName = 'DefaultScene';
-
-/// Default camera name
-const String dsrtDefaultCameraName = 'MainCamera';
-
-/// Default light name
-const String dsrtDefaultLightName = 'MainLight';
-
-/// Default material name
-const String dsrtDefaultMaterialName = 'DefaultMaterial';
-
-/// Default geometry name
-const String dsrtDefaultGeometryName = 'DefaultGeometry';
-
-/// Default texture name
-const String dsrtDefaultTextureName = 'DefaultTexture';
-
-/// Default shader name
-const String dsrtDefaultShaderName = 'DefaultShader';
-
-/// Default animation clip name
-const String dsrtDefaultAnimationClipName = 'DefaultAnimation';
-
-/// Default physics world name
-const String dsrtDefaultPhysicsWorldName = 'DefaultPhysicsWorld';
-
-/// Default audio context name
-const String dsrtDefaultAudioContextName = 'DefaultAudioContext';
-
-/// Default UI manager name
-const String dsrtDefaultUIManagerName = 'DefaultUIManager';
-
-/// Maximum name length for engine objects
-const int dsrtMaxNameLength = 256;
-
-/// Default cache size for textures in megabytes
-const int dsrtDefaultTextureCacheSizeMB = 256;
-
-/// Default cache size for geometries in megabytes
-const int dsrtDefaultGeometryCacheSizeMB = 128;
-
-/// Default cache size for materials in megabytes
-const int dsrtDefaultMaterialCacheSizeMB = 64;
-
-/// Default cache size for shaders in megabytes
-const int dsrtDefaultShaderCacheSizeMB = 32;
-
-/// Default cache size for audio in megabytes
-const int dsrtDefaultAudioCacheSizeMB = 64;
-
-/// Maximum number of concurrent downloads
-const int dsrtMaxConcurrentDownloads = 4;
-
-/// Default download timeout in seconds
-const int dsrtDefaultDownloadTimeoutSeconds = 30;
-
-/// Maximum number of retries for failed downloads
-const int dsrtMaxDownloadRetries = 3;
-
-/// Default compression level for assets
-const int dsrtDefaultCompressionLevel = 6;
-
-/// Default mipmap generation quality
-const int dsrtDefaultMipmapQuality = 1;
-
-/// Default texture filtering mode
-const int dsrtDefaultTextureFilter = 0x2601; // GL_LINEAR
-
-/// Default texture wrapping mode
-const int dsrtDefaultTextureWrap = 0x2901; // GL_REPEAT
-
-/// Default depth function
-const int dsrtDefaultDepthFunc = 0x0203; // GL_LEQUAL
-
-/// Default blend source factor
-const int dsrtDefaultBlendSrcFactor = 0x0302; // GL_SRC_ALPHA
-
-/// Default blend destination factor
-const int dsrtDefaultBlendDstFactor = 0x0303; // GL_ONE_MINUS_SRC_ALPHA
-
-/// Default blend equation
-const int dsrtDefaultBlendEquation = 0x8006; // GL_FUNC_ADD
-
-/// Default cull face mode
-const int dsrtDefaultCullFace = 0x0405; // GL_BACK
-
-/// Default front face winding
-const int dsrtDefaultFrontFace = 0x0901; // GL_CCW
-
-/// Default polygon mode
-const int dsrtDefaultPolygonMode = 0x1B02; // GL_FILL
-
-/// Default stencil function
-const int dsrtDefaultStencilFunc = 0x0202; // GL_ALWAYS
-
-/// Default stencil reference value
-const int dsrtDefaultStencilRef = 0;
-
-/// Default stencil mask
-const int dsrtDefaultStencilMask = 0xFF;
-
-/// Default stencil fail operation
-const int dsrtDefaultStencilFailOp = 0x1E00; // GL_KEEP
-
-/// Default stencil zfail operation
-const int dsrtDefaultStencilZFailOp = 0x1E00; // GL_KEEP
-
-/// Default stencil zpass operation
-const int dsrtDefaultStencilZPassOp = 0x1E00; // GL_KEEP
-
-/// Default scissor test enabled state
-const bool dsrtDefaultScissorTestEnabled = false;
-
-/// Default depth test enabled state
-const bool dsrtDefaultDepthTestEnabled = true;
-
-/// Default stencil test enabled state
-const bool dsrtDefaultStencilTestEnabled = false;
-
-/// Default blend enabled state
-const bool dsrtDefaultBlendEnabled = true;
-
-/// Default cull face enabled state
-const bool dsrtDefaultCullFaceEnabled = true;
-
-/// Default polygon offset enabled state
-const bool dsrtDefaultPolygonOffsetEnabled = false;
-
-/// Default polygon offset factor
-const double dsrtDefaultPolygonOffsetFactor = 0.0;
-
-/// Default polygon offset units
-const double dsrtDefaultPolygonOffsetUnits = 0.0;
-
-/// Default line width
-const double dsrtDefaultLineWidth = 1.0;
-
-/// Default point size
-const double dsrtDefaultPointSize = 1.0;
-
-/// Default point sprite enabled state
-const bool dsrtDefaultPointSpriteEnabled = false;
-
-/// Default program point size enabled state
-const bool dsrtDefaultProgramPointSizeEnabled = false;
-
-/// Default dithering enabled state
-const bool dsrtDefaultDitheringEnabled = true;
-
-/// Default color mask red enabled state
-const bool dsrtDefaultColorMaskRed = true;
-
-/// Default color mask green enabled state
-const bool dsrtDefaultColorMaskGreen = true;
-
-/// Default color mask blue enabled state
-const bool dsrtDefaultColorMaskBlue = true;
-
-/// Default color mask alpha enabled state
-const bool dsrtDefaultColorMaskAlpha = true;
-
-/// Default depth mask enabled state
-const bool dsrtDefaultDepthMask = true;
-
-/// Default stencil mask enabled state
-const bool dsrtDefaultStencilMaskEnabled = true;
-
-/// Default sample coverage enabled state
-const bool dsrtDefaultSampleCoverageEnabled = false;
-
-/// Default sample coverage value
-const double dsrtDefaultSampleCoverageValue = 1.0;
-
-/// Default sample coverage invert state
-const bool dsrtDefaultSampleCoverageInvert = false;
-
-/// Default multisample enabled state
-const bool dsrtDefaultMultisampleEnabled = true;
-
-/// Default framebuffer sRGB enabled state
-const bool dsrtDefaultFramebufferSRGBEnabled = false;
-
-/// Default primitive restart enabled state
-const bool dsrtDefaultPrimitiveRestartEnabled = false;
-
-/// Default primitive restart index
-const int dsrtDefaultPrimitiveRestartIndex = 0xFFFFFFFF;
-
-/// Maximum uniform block size in bytes
-const int dsrtMaxUniformBlockSize = 65536;
-
-/// Maximum uniform buffer size in bytes
-const int dsrtMaxUniformBufferSize = 16777216;
-
-/// Maximum shader storage block size in bytes
-const int dsrtMaxShaderStorageBlockSize = 134217728;
-
-/// Maximum shader storage buffer size in bytes
-const int dsrtMaxShaderStorageBufferSize = 1073741824;
-
-/// Maximum atomic counter buffer size in bytes
-const int dsrtMaxAtomicCounterBufferSize = 32768;
-
-/// Maximum transform feedback buffer size in bytes
-const int dsrtMaxTransformFeedbackBufferSize = 67108864;
-
-/// Maximum transform feedback separate attribs
-const int dsrtMaxTransformFeedbackSeparateAttribs = 4;
-
-/// Maximum transform feedback interleaved attribs
-const int dsrtMaxTransformFeedbackInterleavedAttribs = 64;
-
-/// Maximum transform feedback buffers
-const int dsrtMaxTransformFeedbackBuffers = 4;
-
-/// Maximum clip distances
-const int dsrtMaxClipDistances = 8;
-
-/// Maximum cull distances
-const int dsrtMaxCullDistances = 8;
-
-/// Maximum combined clip and cull distances
-const int dsrtMaxCombinedClipCullDistances = 8;
-
-/// Maximum viewports
-const int dsrtMaxViewports = 16;
-
-/// Maximum viewport dimensions
-const int dsrtMaxViewportWidth = 16384;
-const int dsrtMaxViewportHeight = 16384;
-
-/// Maximum scissor box dimensions
-const int dsrtMaxScissorBoxWidth = 16384;
-const int dsrtMaxScissorBoxHeight = 16384;
-
-/// Maximum texture buffer size in texels
-const int dsrtMaxTextureBufferSize = 65536;
-
-/// Maximum rectangle texture size
-const int dsrtMaxRectangleTextureSize = 16384;
-
-/// Maximum 3D texture size
-const int dsrtMax3DTextureSize = 2048;
-
-/// Maximum array texture layers
-const int dsrtMaxArrayTextureLayers = 256;
-
-/// Maximum cubemap texture size
-const int dsrtMaxCubeMapTextureSize = 16384;
-
-/// Maximum renderbuffer size
-const int dsrtMaxRenderbufferSize = 16384;
-
-/// Maximum samples for multisampling
-const int dsrtMaxSamples = 32;
-
-/// Maximum color attachments
-const int dsrtMaxColorAttachments = 8;
-
-/// Maximum draw buffers
-const int dsrtMaxDrawBuffers = 8;
-
-/// Maximum dual source draw buffers
-const int dsrtMaxDualSourceDrawBuffers = 1;
-
-/// Maximum elements indices
-const int dsrtMaxElementsIndices = 150000;
-
-/// Maximum elements vertices
-const int dsrtMaxElementsVertices = 100000;
-
-/// Maximum fragment uniform components
-const int dsrtMaxFragmentUniformComponents = 1024;
-
-/// Maximum geometry uniform components
-const int dsrtMaxGeometryUniformComponents = 1024;
-
-/// Maximum vertex uniform components
-const int dsrtMaxVertexUniformComponents = 1024;
-
-/// Maximum fragment uniform vectors
-const int dsrtMaxFragmentUniformVectors = 256;
-
-/// Maximum geometry uniform vectors
-const int dsrtMaxGeometryUniformVectors = 256;
-
-/// Maximum vertex uniform vectors
-const int dsrtMaxVertexUniformVectors = 256;
-
-/// Maximum varying vectors
-const int dsrtMaxVaryingVectors = 15;
-
-/// Maximum fragment atomic counters
-const int dsrtMaxFragmentAtomicCounters = 8;
-
-/// Maximum geometry atomic counters
-const int dsrtMaxGeometryAtomicCounters = 8;
-
-/// Maximum vertex atomic counters
-const int dsrtMaxVertexAtomicCounters = 8;
-
-/// Maximum atomic counter buffer bindings
-const int dsrtMaxAtomicCounterBufferBindings = 8;
-
-/// Maximum image uniforms
-const int dsrtMaxImageUniforms = 8;
-
-/// Maximum combined image uniforms and fragment outputs
-const int dsrtMaxCombinedImageUniformsFragmentOutputs = 8;
-
-/// Maximum image samples
-const int dsrtMaxImageSamples = 0;
-
-/// Maximum vertex image uniforms
-const int dsrtMaxVertexImageUniforms = 0;
-
-/// Maximum tess control image uniforms
-const int dsrtMaxTessControlImageUniforms = 0;
-
-/// Maximum tess evaluation image uniforms
-const int dsrtMaxTessEvaluationImageUniforms = 0;
-
-/// Maximum geometry image uniforms
-const int dsrtMaxGeometryImageUniforms = 0;
-
-/// Maximum fragment image uniforms
-const int dsrtMaxFragmentImageUniforms = 8;
-
-/// Maximum combined image uniforms
-const int dsrtMaxCombinedImageUniforms = 48;
-
-/// Maximum combined shader output resources
-const int dsrtMaxCombinedShaderOutputResources = 8;
-
-/// Maximum shader storage buffer bindings
-const int dsrtMaxShaderStorageBufferBindings = 8;
-
-/// Maximum transform feedback buffers
-const int dsrtMaxTransformFeedbackBuffers = 4;
-
-/// Maximum uniform buffer bindings
-const int dsrtMaxUniformBufferBindings = 72;
-
-/// Maximum combined uniform blocks
-const int dsrtMaxCombinedUniformBlocks = 70;
-
-/// Maximum combined texture image units
-const int dsrtMaxCombinedTextureImageUnits = 96;
-
-/// Maximum combined shader storage blocks
-const int dsrtMaxCombinedShaderStorageBlocks = 96;
-
-/// Maximum vertex shader storage blocks
-const int dsrtMaxVertexShaderStorageBlocks = 16;
-
-/// Maximum geometry shader storage blocks
-const int dsrtMaxGeometryShaderStorageBlocks = 16;
-
-/// Maximum tess control shader storage blocks
-const int dsrtMaxTessControlShaderStorageBlocks = 16;
-
-/// Maximum tess evaluation shader storage blocks
-const int dsrtMaxTessEvaluationShaderStorageBlocks = 16;
-
-/// Maximum fragment shader storage blocks
-const int dsrtMaxFragmentShaderStorageBlocks = 16;
-
-/// Maximum compute shader storage blocks
-const int dsrtMaxComputeShaderStorageBlocks = 16;
-
-/// Maximum combined image uniforms and shader storage blocks
-const int dsrtMaxCombinedImageUniformsShaderStorageBlocks = 8;
-
-/// Maximum debug message length
-const int dsrtMaxDebugMessageLength = 1024;
-
-/// Maximum debug stacked messages
-const int dsrtMaxDebugStackedMessages = 16;
-
-/// Maximum debug group stack depth
-const int dsrtMaxDebugGroupStackDepth = 64;
-
-/// Maximum label length
-const int dsrtMaxLabelLength = 256;
-
-/// Default debug output enabled state
-const bool dsrtDefaultDebugOutputEnabled = false;
-
-/// Default debug output synchronous state
-const bool dsrtDefaultDebugOutputSynchronous = false;
-
-/// Default debug output severity filter
-const int dsrtDefaultDebugOutputSeverity = 0x9146; // GL_DEBUG_SEVERITY_NOTIFICATION
-
-/// Default debug output source filter
-const int dsrtDefaultDebugOutputSource = 0x824A; // GL_DONT_CARE
-
-/// Default debug output type filter
-const int dsrtDefaultDebugOutputType = 0x824B; // GL_DONT_CARE
-
-/// Default debug output IDs to include
-const List<int> dsrtDefaultDebugOutputIDs = [];
-
-/// Default debug output IDs to exclude
-const List<int> dsrtDefaultDebugOutputExcludeIDs = [];
-
-/// Engine performance profiling sample count
-const int dsrtPerformanceProfilingSampleCount = 60;
-
-/// Engine memory monitoring update interval in milliseconds
-const int dsrtMemoryMonitoringUpdateInterval = 1000;
-
-/// Engine frame time warning threshold in milliseconds
-const double dsrtFrameTimeWarningThreshold = 16.67;
-
-/// Engine frame time critical threshold in milliseconds
-const double dsrtFrameTimeCriticalThreshold = 33.33;
-
-/// Engine memory warning threshold in megabytes
-const double dsrtMemoryWarningThreshold = 512.0;
-
-/// Engine memory critical threshold in megabytes
-const double dsrtMemoryCriticalThreshold = 768.0;
-
-/// Engine GPU memory warning threshold in megabytes
-const double dsrtGPUMemoryWarningThreshold = 256.0;
-
-/// Engine GPU memory critical threshold in megabytes
-const double dsrtGPUMemoryCriticalThreshold = 384.0;
-
-/// Default frame rate limit
-const double dsrtDefaultFrameRateLimit = 0.0; // Unlimited
-
-/// Default vsync enabled state
-const bool dsrtDefaultVSyncEnabled = true;
-
-/// Default power preference
-const String dsrtDefaultPowerPreference = 'default';
-
-/// Default fail if major performance caveat
-const bool dsrtDefaultFailIfMajorPerformanceCaveat = false;
-
-/// Default preserve drawing buffer
-const bool dsrtDefaultPreserveDrawingBuffer = false;
-
-/// Default premultiplied alpha
-const bool dsrtDefaultPremultipliedAlpha = false;
-
-/// Default antialias
-const bool dsrtDefaultAntialias = true;
-
-/// Default alpha
-const bool dsrtDefaultAlpha = true;
-
-/// Default depth
-const bool dsrtDefaultDepth = true;
-
-/// Default stencil
-const bool dsrtDefaultStencil = false;
-
-/// Default desynchronized
-const bool dsrtDefaultDesynchronized = false;
-
-/// Default xr compatible
-const bool dsrtDefaultXRCompatible = false;
+/// This class provides access to all DSRT Engine constants.
+/// Use these constants throughout your application for consistency.
+class DsrtConstantsExport {
+  /// Mathematical constants
+  static const DsrtMathConstants math = DsrtMathConstants();
+  
+  /// Graphics constants
+  static const DsrtGraphicsConstants graphics = DsrtGraphicsConstants();
+  
+  /// Physics constants
+  static const DsrtPhysicsConstants physics = DsrtPhysicsConstants();
+  
+  /// Audio constants
+  static const DsrtAudioConstants audio = DsrtAudioConstants();
+  
+  /// Animation constants
+  static const DsrtAnimationConstants animation = DsrtAnimationConstants();
+  
+  /// Memory constants
+  static const DsrtMemoryConstants memory = DsrtMemoryConstants();
+  
+  /// Platform constants
+  static const DsrtPlatformConstants platform = DsrtPlatformConstants();
+  
+  /// Error constants
+  static const DsrtErrorConstants error = DsrtErrorConstants();
+  
+  /// Input constants
+  static const DsrtInputConstants input = DsrtInputConstants();
+  
+  /// Default values
+  static const DsrtDefaultValues defaults = DsrtDefaultValues();
+  
+  /// Engine identification
+  static const DsrtConstants engine = DsrtConstants();
+}
