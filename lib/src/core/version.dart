@@ -1,826 +1,924 @@
-/// DSRT Engine version information and compatibility tracking.
-/// 
-/// This class manages engine versioning, feature flags, and backward compatibility.
-/// All version numbers follow Semantic Versioning (MAJOR.MINOR.PATCH).
-/// 
-/// [DSRT]: Dart Spatial Rendering Technology
-/// 
-/// @internal - Core engine internals
-library dsrt.core.version;
+// lib/src/core/version.dart
 
-/// Current DSRT Engine version with full implementation
-class DSRTVersion {
-  /// Major version number indicating breaking changes
+/// DSRT Engine - Version Management System
+/// 
+/// Provides comprehensive version tracking, comparison, and validation
+/// for the DSRT Engine and its components.
+/// 
+/// @category Core
+/// @version 1.0.0
+/// @license MIT
+/// @copyright DSRT Engine Team
+
+library dsrt_engine.core.version;
+
+import 'dart:math' as math;
+
+/// Version component type for semantic versioning
+enum DsrtVersionComponent {
+  /// Major version (breaking changes)
+  major,
+  
+  /// Minor version (new features, backward compatible)
+  minor,
+  
+  /// Patch version (bug fixes)
+  patch,
+  
+  /// Pre-release identifier
+  prerelease,
+  
+  /// Build metadata
+  build
+}
+
+/// Represents a semantic version (SemVer) with parsing, comparison,
+/// and validation capabilities.
+class DsrtVersion implements Comparable<DsrtVersion> {
+  /// Major version number
   final int major;
   
-  /// Minor version number indicating new features
+  /// Minor version number
   final int minor;
   
-  /// Patch version number indicating bug fixes
+  /// Patch version number
   final int patch;
   
-  /// Build metadata string
-  final String? build;
-  
-  /// Pre-release identifier string
+  /// Pre-release identifier (may be null)
   final String? prerelease;
   
-  /// Creates a complete version object with validation
+  /// Build metadata (may be null)
+  final String? build;
+  
+  /// Creates a new version instance.
   /// 
-  /// [major]: Major version number, must be non-negative
-  /// [minor]: Minor version number, must be non-negative
-  /// [patch]: Patch version number, must be non-negative
-  /// [build]: Optional build metadata, must be alphanumeric with dots and hyphens
-  /// [prerelease]: Optional pre-release identifier, must be alphanumeric with dots and hyphens
-  DSRTVersion({
-    required this.major,
-    required this.minor,
-    required this.patch,
-    this.build,
-    this.prerelease,
+  /// [major]: Major version number (non-negative)
+  /// [minor]: Minor version number (non-negative)
+  /// [patch]: Patch version number (non-negative)
+  /// [prerelease]: Optional pre-release identifier
+  /// [build]: Optional build metadata
+  /// 
+  /// Throws [ArgumentError] if any version component is negative.
+  factory DsrtVersion(
+    int major,
+    int minor,
+    int patch, {
+    String? prerelease,
+    String? build,
   }) {
-    _validateVersion(major, minor, patch, build, prerelease);
+    // Validate version components
+    _validateVersionComponent(major, 'major');
+    _validateVersionComponent(minor, 'minor');
+    _validateVersionComponent(patch, 'patch');
+    
+    // Validate pre-release identifier if provided
+    if (prerelease != null && prerelease.isNotEmpty) {
+      _validatePreReleaseIdentifier(prerelease);
+    }
+    
+    // Validate build metadata if provided
+    if (build != null && build.isNotEmpty) {
+      _validateBuildMetadata(build);
+    }
+    
+    return DsrtVersion._internal(
+      major,
+      minor,
+      patch,
+      prerelease,
+      build,
+    );
   }
   
-  /// Current DSRT Engine version - fully implemented
-  static const DSRTVersion current = DSRTVersion(
-    major: 0,
-    minor: 1,
-    patch: 0,
-    build: 'build.20240115.1200',
-    prerelease: 'alpha',
+  /// Internal constructor for validated data
+  const DsrtVersion._internal(
+    this.major,
+    this.minor,
+    this.patch,
+    this.prerelease,
+    this.build,
   );
   
-  /// Minimum supported WebGL version
-  static const String minimumWebGLVersion = '2.0';
-  
-  /// Minimum supported Dart SDK version
-  static const String minimumDartVersion = '3.0.0';
-  
-  /// Minimum supported Flutter version
-  static const String minimumFlutterVersion = '3.10.0';
-  
-  /// Engine identifier string
-  static const String engineIdentifier = 'DSRT Engine';
-  
-  /// Engine full name
-  static const String engineFullName = 'Dart Spatial Rendering Technology Engine';
-  
-  /// Engine copyright notice with year
-  static const String engineCopyright = 'Copyright © 2024 DSRT Engine. All Rights Reserved.';
-  
-  /// Engine license type
-  static const String engineLicense = 'MIT License';
-  
-  /// Engine license text
-  static const String engineLicenseText = '''
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-''';
-  
-  /// Engine repository URL
-  static const String engineRepository = 'https://github.com/dheasrafa-droid/dsrt-exs';
-  
-  /// Engine documentation URL
-  static const String engineDocumentation = 'https://dsrt-exs.vercel.app/docs';
-  
-  /// Engine issue tracker URL
-  static const String engineIssues = 'https://github.com/dheasrafa-droid/dsrt-exs/issues';
-  
-  /// Engine discussions URL
-  static const String engineDiscussions = 'https://github.com/dheasrafa-droid/dsrt-exs/discussions';
-  
-  /// Engine wiki URL
-  static const String engineWiki = 'https://github.com/dheasrafa-droid/dsrt-exs/wiki';
-  
-  /// Engine support email
-  static const String engineSupportEmail = 'support@dsrt-engine.dev';
-  
-  /// Engine security email
-  static const String engineSecurityEmail = 'security@dsrt-engine.dev';
-  
-  /// Engine changelog URL
-  static const String engineChangelog = 'https://github.com/dheasrafa-droid/dsrt-exs/blob/main/CHANGELOG.md';
-  
-  /// Engine roadmap URL
-  static const String engineRoadmap = 'https://github.com/dheasrafa-droid/dsrt-exs/blob/main/ROADMAP.md';
-  
-  /// Engine contribution guidelines URL
-  static const String engineContributing = 'https://github.com/dheasrafa-droid/dsrt-exs/blob/main/CONTRIBUTING.md';
-  
-  /// Engine code of conduct URL
-  static const String engineCodeOfConduct = 'https://github.com/dheasrafa-droid/dsrt-exs/blob/main/CODE_OF_CONDUCT.md';
-  
-  /// Validates version parameters
-  void _validateVersion(int major, int minor, int patch, String? build, String? prerelease) {
-    if (major < 0) {
-      throw ArgumentError('Major version must be non-negative');
-    }
-    
-    if (minor < 0) {
-      throw ArgumentError('Minor version must be non-negative');
-    }
-    
-    if (patch < 0) {
-      throw ArgumentError('Patch version must be non-negative');
-    }
-    
-    if (build != null && !_isValidBuildIdentifier(build)) {
-      throw ArgumentError('Build identifier must contain only [0-9A-Za-z-.]');
-    }
-    
-    if (prerelease != null && !_isValidPreReleaseIdentifier(prerelease)) {
-      throw ArgumentError('Pre-release identifier must contain only [0-9A-Za-z-.]');
-    }
-  }
-  
-  /// Checks if build identifier is valid
-  bool _isValidBuildIdentifier(String identifier) {
-    final regex = RegExp(r'^[0-9A-Za-z\-\.]+$');
-    return regex.hasMatch(identifier);
-  }
-  
-  /// Checks if pre-release identifier is valid
-  bool _isValidPreReleaseIdentifier(String identifier) {
-    final regex = RegExp(r'^[0-9A-Za-z\-\.]+$');
-    return regex.hasMatch(identifier);
-  }
-  
-  /// Parses a version string into a DSRTVersion object with full validation
+  /// Parses a version string into a DsrtVersion instance.
   /// 
-  /// [versionString]: Version string in Semantic Versioning 2.0.0 format
+  /// [versionString]: Version string in SemVer format (e.g., "1.2.3-alpha+build")
   /// 
-  /// Returns a fully validated DSRTVersion object
+  /// Returns a DsrtVersion instance.
   /// 
-  /// Throws FormatException with detailed error message if parsing fails
-  static DSRTVersion parse(String versionString) {
+  /// Throws [FormatException] if the string is not valid SemVer.
+  factory DsrtVersion.parse(String versionString) {
+    if (versionString.isEmpty) {
+      throw FormatException('Version string cannot be empty');
+    }
+    
+    // Match SemVer pattern
     final regex = RegExp(
-      r'^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)' // Core version
-      r'(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?' // Pre-release
-      r'(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$' // Build metadata
+      r'^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)' // Major.minor.patch
+      r'(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?' // Pre-release
+      r'(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$' // Build metadata
     );
     
     final match = regex.firstMatch(versionString);
-    
     if (match == null) {
       throw FormatException(
-        'Invalid version string: "$versionString". '
-        'Expected format: MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD] '
-        'following Semantic Versioning 2.0.0'
+        'Invalid version format: $versionString. Expected format: major.minor.patch[-prerelease][+build]',
       );
     }
     
     try {
-      final major = int.parse(match.group(1)!);
-      final minor = int.parse(match.group(2)!);
-      final patch = int.parse(match.group(3)!);
-      final prerelease = match.group(4);
-      final build = match.group(5);
+      final major = int.parse(match[1]!);
+      final minor = int.parse(match[2]!);
+      final patch = int.parse(match[3]!);
+      final prerelease = match[4];
+      final build = match[5];
       
-      return DSRTVersion(
-        major: major,
-        minor: minor,
-        patch: patch,
-        build: build,
+      return DsrtVersion(
+        major,
+        minor,
+        patch,
         prerelease: prerelease,
+        build: build,
       );
     } catch (e) {
       throw FormatException(
-        'Failed to parse version components: $e',
-        versionString
+        'Failed to parse version components: $versionString',
+        versionString,
       );
     }
   }
   
-  /// Tries to parse a version string, returns null on failure
+  /// Creates a version from a version code integer.
   /// 
-  /// [versionString]: Version string to parse
+  /// [versionCode]: Version code in format: major * 10000 + minor * 100 + patch
+  /// [prerelease]: Optional pre-release identifier
+  /// [build]: Optional build metadata
   /// 
-  /// Returns DSRTVersion if successful, null otherwise
-  static DSRTVersion? tryParse(String versionString) {
-    try {
-      return parse(versionString);
-    } catch (_) {
-      return null;
+  /// Returns a DsrtVersion instance.
+  factory DsrtVersion.fromCode(
+    int versionCode, {
+    String? prerelease,
+    String? build,
+  }) {
+    if (versionCode < 0) {
+      throw ArgumentError('Version code must be non-negative');
+    }
+    
+    final major = versionCode ~/ 10000;
+    final minor = (versionCode % 10000) ~/ 100;
+    final patch = versionCode % 100;
+    
+    return DsrtVersion(
+      major,
+      minor,
+      patch,
+      prerelease: prerelease,
+      build: build,
+    );
+  }
+  
+  /// Gets the version component at the specified index.
+  /// 
+  /// [index]: Index of the component (0=major, 1=minor, 2=patch)
+  /// 
+  /// Returns the component value.
+  /// 
+  /// Throws [RangeError] if index is out of bounds.
+  int operator [](int index) {
+    switch (index) {
+      case 0:
+        return major;
+      case 1:
+        return minor;
+      case 2:
+        return patch;
+      default:
+        throw RangeError.index(index, this, 'index', 'Index must be 0, 1, or 2');
     }
   }
   
-  /// Compares this version with another version with full implementation
+  /// Compares this version with another version.
   /// 
-  /// [other]: Version to compare with
+  /// [other]: The version to compare with
   /// 
   /// Returns:
-  /// - Negative integer if this version is older
+  /// - Negative if this version is older than [other]
   /// - Zero if versions are equal
-  /// - Positive integer if this version is newer
-  int compareTo(DSRTVersion other) {
-    // Compare major versions
+  /// - Positive if this version is newer than [other]
+  /// 
+  /// Note: Build metadata is ignored in comparison.
+  @override
+  int compareTo(DsrtVersion other) {
+    // Compare major version
     if (major != other.major) {
-      return major - other.major;
+      return major.compareTo(other.major);
     }
     
-    // Compare minor versions
+    // Compare minor version
     if (minor != other.minor) {
-      return minor - other.minor;
+      return minor.compareTo(other.minor);
     }
     
-    // Compare patch versions
+    // Compare patch version
     if (patch != other.patch) {
-      return patch - other.patch;
+      return patch.compareTo(other.patch);
     }
     
-    // If one has pre-release and the other doesn't,
-    // the one without pre-release is newer
-    if (prerelease == null && other.prerelease != null) {
-      return 1;
-    }
-    
-    if (prerelease != null && other.prerelease == null) {
-      return -1;
-    }
-    
-    // Both have pre-release, compare them
-    if (prerelease != null && other.prerelease != null) {
-      return _comparePreRelease(prerelease!, other.prerelease!);
-    }
-    
-    // Versions are equal
-    return 0;
+    // Compare pre-release identifiers
+    return _comparePreRelease(prerelease, other.prerelease);
   }
   
-  /// Compares pre-release identifiers according to SemVer 2.0.0
-  int _comparePreRelease(String a, String b) {
-    final aParts = a.split('.');
-    final bParts = b.split('.');
-    
-    for (var i = 0; i < aParts.length && i < bParts.length; i++) {
-      final aPart = aParts[i];
-      final bPart = bParts[i];
-      
-      final aIsNumeric = _isNumeric(aPart);
-      final bIsNumeric = _isNumeric(bPart);
-      
-      if (aIsNumeric && bIsNumeric) {
-        final aNum = int.parse(aPart);
-        final bNum = int.parse(bPart);
-        
-        if (aNum != bNum) {
-          return aNum - bNum;
-        }
-      } else if (aIsNumeric && !bIsNumeric) {
-        // Numeric identifiers have lower precedence
-        return -1;
-      } else if (!aIsNumeric && bIsNumeric) {
-        // Non-numeric identifiers have higher precedence
-        return 1;
-      } else {
-        // Both are non-numeric, compare lexically
-        final comparison = aPart.compareTo(bPart);
-        if (comparison != 0) {
-          return comparison;
-        }
-      }
-    }
-    
-    // All compared parts are equal
-    if (aParts.length < bParts.length) {
-      return -1;
-    } else if (aParts.length > bParts.length) {
-      return 1;
-    }
-    
-    return 0;
-  }
-  
-  /// Checks if a string is numeric
-  bool _isNumeric(String s) {
-    return RegExp(r'^\d+$').hasMatch(s);
-  }
-  
-  /// Checks if this version is older than another version
+  /// Checks if this version satisfies a version range.
   /// 
-  /// [other]: Version to compare with
+  /// [range]: Version range specification
   /// 
-  /// Returns true if this version is strictly older than the other version
-  bool isOlderThan(DSRTVersion other) {
-    return compareTo(other) < 0;
-  }
-  
-  /// Checks if this version is newer than another version
-  /// 
-  /// [other]: Version to compare with
-  /// 
-  /// Returns true if this version is strictly newer than the other version
-  bool isNewerThan(DSRTVersion other) {
-    return compareTo(other) > 0;
-  }
-  
-  /// Checks if this version is equal to another version
-  /// 
-  /// [other]: Version to compare with
-  /// 
-  /// Returns true if versions are exactly equal
-  bool isEqualTo(DSRTVersion other) {
-    return compareTo(other) == 0;
-  }
-  
-  /// Checks if this version satisfies a version range
-  /// 
-  /// [range]: Version range string (e.g., "^1.2.3", "~2.0.0", ">=3.0.0 <4.0.0")
-  /// 
-  /// Returns true if this version satisfies the range
+  /// Returns true if this version is within the specified range.
   bool satisfies(String range) {
     try {
-      return _parseRange(range).evaluate(this);
-    } catch (_) {
+      final parsedRange = DsrtVersionRange.parse(range);
+      return parsedRange.contains(this);
+    } catch (e) {
       return false;
-    }
-  }
-  
-  /// Parses a version range into evaluable criteria
-  _VersionRange _parseRange(String range) {
-    // Implement SemVer range parsing
-    // This is a simplified implementation
-    final criteria = <_VersionCriterion>[];
-    final parts = range.split(' ').where((p) => p.isNotEmpty);
-    
-    for (final part in parts) {
-      criteria.add(_parseCriterion(part));
-    }
-    
-    return _VersionRange(criteria);
-  }
-  
-  /// Parses a single version criterion
-  _VersionCriterion _parseCriterion(String criterion) {
-    if (criterion.startsWith('^')) {
-      final version = parse(criterion.substring(1));
-      return _VersionCriterion.caret(version);
-    } else if (criterion.startsWith('~')) {
-      final version = parse(criterion.substring(1));
-      return _VersionCriterion.tilde(version);
-    } else if (criterion.startsWith('>=')) {
-      final version = parse(criterion.substring(2));
-      return _VersionCriterion.greaterThanOrEqual(version);
-    } else if (criterion.startsWith('<=')) {
-      final version = parse(criterion.substring(2));
-      return _VersionCriterion.lessThanOrEqual(version);
-    } else if (criterion.startsWith('>')) {
-      final version = parse(criterion.substring(1));
-      return _VersionCriterion.greaterThan(version);
-    } else if (criterion.startsWith('<')) {
-      final version = parse(criterion.substring(1));
-      return _VersionCriterion.lessThan(version);
-    } else if (criterion.startsWith('=')) {
-      final version = parse(criterion.substring(1));
-      return _VersionCriterion.equal(version);
-    } else {
-      final version = parse(criterion);
-      return _VersionCriterion.equal(version);
     }
   }
   
   /// Checks if this version is compatible with another version
+  /// based on semantic versioning rules.
   /// 
   /// [other]: Version to check compatibility with
-  /// [allowMinorUpdates]: Whether minor version updates are considered compatible
-  /// [allowPatchUpdates]: Whether patch version updates are considered compatible
   /// 
-  /// Returns true if versions are compatible according to specified rules
-  bool isCompatibleWith(
-    DSRTVersion other, {
-    bool allowMinorUpdates = true,
-    bool allowPatchUpdates = true,
-  }) {
-    // Major versions must always match for compatibility
-    if (major != other.major) {
-      return false;
+  /// Returns true if versions are compatible.
+  bool isCompatibleWith(DsrtVersion other) {
+    // Same major version and this version >= other version
+    return major == other.major && compareTo(other) >= 0;
+  }
+  
+  /// Checks if this version is a pre-release version.
+  bool get isPreRelease => prerelease != null && prerelease!.isNotEmpty;
+  
+  /// Checks if this version is a stable release.
+  bool get isStable => !isPreRelease;
+  
+  /// Gets the version code as integer.
+  /// 
+  /// Format: major * 10000 + minor * 100 + patch
+  int get versionCode => major * 10000 + minor * 100 + patch;
+  
+  /// Gets the next version based on the specified component.
+  /// 
+  /// [component]: Component to increment
+  /// 
+  /// Returns a new version with the specified component incremented
+  /// and lower components reset to zero.
+  DsrtVersion nextVersion(DsrtVersionComponent component) {
+    switch (component) {
+      case DsrtVersionComponent.major:
+        return DsrtVersion(major + 1, 0, 0);
+      case DsrtVersionComponent.minor:
+        return DsrtVersion(major, minor + 1, 0);
+      case DsrtVersionComponent.patch:
+        return DsrtVersion(major, minor, patch + 1);
+      case DsrtVersionComponent.prerelease:
+        throw StateError('Cannot automatically generate next pre-release');
+      case DsrtVersionComponent.build:
+        throw StateError('Cannot automatically generate next build');
     }
-    
-    if (!allowMinorUpdates && minor != other.minor) {
-      return false;
-    }
-    
-    if (!allowPatchUpdates && patch != other.patch) {
-      return false;
-    }
-    
-    // If this version has pre-release, the other must also have pre-release
-    if (prerelease != null && other.prerelease == null) {
-      return false;
-    }
-    
-    // Check if this version is not older than the other
-    return !isOlderThan(other);
   }
   
-  /// Checks if a feature is supported based on minimum required version
-  /// 
-  /// [minimumVersion]: Minimum version required for the feature
-  /// 
-  /// Returns true if this version meets or exceeds the minimum requirement
-  bool supportsFeature(DSRTVersion minimumVersion) {
-    return !isOlderThan(minimumVersion);
-  }
-  
-  /// Gets the next major version
-  /// 
-  /// Returns a new version with major incremented and minor/patch reset to 0
-  DSRTVersion nextMajor() {
-    return DSRTVersion(
-      major: major + 1,
-      minor: 0,
-      patch: 0,
-    );
-  }
-  
-  /// Gets the next minor version
-  /// 
-  /// Returns a new version with minor incremented and patch reset to 0
-  DSRTVersion nextMinor() {
-    return DSRTVersion(
-      major: major,
-      minor: minor + 1,
-      patch: 0,
-    );
-  }
-  
-  /// Gets the next patch version
-  /// 
-  /// Returns a new version with patch incremented
-  DSRTVersion nextPatch() {
-    return DSRTVersion(
-      major: major,
-      minor: minor,
-      patch: patch + 1,
-    );
-  }
-  
-  /// Gets the version as a string in Semantic Versioning 2.0.0 format
-  /// 
-  /// Returns version string in format "MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]"
+  /// Gets the string representation of this version.
   @override
   String toString() {
-    var result = '$major.$minor.$patch';
+    final buffer = StringBuffer();
+    buffer.write('$major.$minor.$patch');
     
-    if (prerelease != null) {
-      result = '$result-$prerelease';
+    if (prerelease != null && prerelease!.isNotEmpty) {
+      buffer.write('-');
+      buffer.write(prerelease);
     }
     
-    if (build != null) {
-      result = '$result+$build';
+    if (build != null && build!.isNotEmpty) {
+      buffer.write('+');
+      buffer.write(build);
     }
     
-    return result;
+    return buffer.toString();
   }
   
-  /// Gets the version as an integer for fast comparisons
-  /// 
-  /// Returns version encoded as integer: (major << 16) | (minor << 8) | patch
-  int toInteger() {
-    return (major << 16) | (minor << 8) | patch;
+  /// Gets the hash code for this version.
+  @override
+  int get hashCode {
+    return Object.hash(
+      major,
+      minor,
+      patch,
+      prerelease,
+      build,
+    );
   }
   
-  /// Gets engine information as a formatted string
-  /// 
-  /// Returns multi-line string with engine name, version, copyright, and links
-  static String get engineInformation {
-    return '''
-$engineIdentifier v${current.toString()}
-$engineFullName
-$engineCopyright
-
-Repository: $engineRepository
-Documentation: $engineDocumentation
-Issues: $engineIssues
-Support: $engineSupportEmail
-
-$engineLicense
-''';
+  /// Checks equality with another object.
+  @override
+  bool operator ==(Object other) {
+    return other is DsrtVersion &&
+        major == other.major &&
+        minor == other.minor &&
+        patch == other.patch &&
+        prerelease == other.prerelease &&
+        build == other.build;
   }
   
-  /// Gets engine capabilities based on current version
-  /// 
-  /// Returns a map of capability flags indicating supported features
-  static Map<String, bool> get engineCapabilities {
-    return {
-      'webgl2': true,
-      'webgpu': false,
-      'compute_shaders': false,
-      'ray_tracing': false,
-      'mesh_shaders': false,
-      'tessellation': false,
-      'geometry_shaders': false,
-      'transform_feedback': false,
-      'instanced_arrays': true,
-      'vertex_array_objects': true,
-      'uniform_buffer_objects': true,
-      'sync_objects': false,
-      'query_objects': true,
-      'sampler_objects': true,
-      'texture_storage': true,
-      'texture_3d': true,
-      'texture_array': true,
-      'texture_float': true,
-      'texture_half_float': true,
-      'texture_float_linear': false,
-      'texture_half_float_linear': false,
-      'color_buffer_float': false,
-      'color_buffer_half_float': false,
-      'depth_texture': true,
-      'depth24': true,
-      'depth32': false,
-      'depth24_stencil8': true,
-      'depth32_stencil8': false,
-      'float_blend': false,
-      'sRGB': true,
-      'draw_buffers': true,
-      'draw_buffers_indexed': false,
-      'max_draw_buffers': 8,
-      'max_color_attachments': 8,
-      'anisotropic_filtering': true,
-      'texture_compression': true,
-      'texture_compression_bptc': false,
-      'texture_compression_rgtc': false,
-      'texture_compression_s3tc': true,
-      'texture_compression_etc': false,
-      'texture_compression_astc': false,
-      'multisample': true,
-      'multisample_render_to_texture': false,
-      'shader_multisample_interpolation': false,
-      'standard_derivatives': true,
-      'fragment_shader_interlock': false,
-      'shader_texture_lod': true,
-      'shader_draw_parameters': false,
-      'clip_cull_distance': false,
-      'polygon_mode': false,
-      'conservative_depth': false,
-      'blend_minmax': true,
-      'blend_equation_advanced': false,
-      'blend_equation_advanced_coherent': false,
-      'multiview': false,
-      'occlusion_query': true,
-      'occlusion_query_boolean': true,
-      'timer_query': false,
-      'disjoint_timer_query': false,
-      'parallel_shader_compile': false,
-      'polygon_offset_clamp': false,
-      'provoking_vertex': false,
-      'rasterizer_discard': true,
-      'robust_buffer_access': false,
-      'robustness': false,
-      'sample_shading': false,
-      'sample_variables': false,
-      'shader_atomic_counters': false,
-      'shader_image_load_store': false,
-      'shader_image_size': false,
-      'shader_storage_buffer_object': false,
-      'stencil_texturing': false,
-      'texture_border_clamp': false,
-      'texture_buffer': false,
-      'texture_cube_map_array': false,
-      'texture_gather': false,
-      'texture_mirror_clamp_to_edge': false,
-      'texture_multisample': false,
-      'texture_query_lod': false,
-      'texture_swizzle': false,
-      'vertex_attrib_binding': false,
-      'vertex_attrib_integer': true,
-    };
-  }
-  
-  /// Gets minimum system requirements
-  /// 
-  /// Returns a map of minimum system requirements
-  static Map<String, dynamic> get systemRequirements {
-    return {
-      'dart_sdk': minimumDartVersion,
-      'flutter_sdk': minimumFlutterVersion,
-      'webgl': minimumWebGLVersion,
-      'cpu_cores': 2,
-      'ram_mb': 2048,
-      'gpu_vram_mb': 512,
-      'os_windows': '10+',
-      'os_macos': '10.15+',
-      'os_linux': 'Ubuntu 20.04+',
-      'os_android': '8.0+',
-      'os_ios': '13.0+',
-      'browser_chrome': '79+',
-      'browser_firefox': '70+',
-      'browser_safari': '14+',
-      'browser_edge': '79+',
-      'browser_opera': '66+',
-    };
-  }
-  
-  /// Checks if current system meets minimum requirements
-  /// 
-  /// Returns a map with check results and failure reasons if any
-  static Map<String, dynamic> checkSystemRequirements() {
-    final results = <String, dynamic>{
-      'meets_requirements': true,
-      'checks': <Map<String, dynamic>>[],
-    };
-    
-    // Check Dart version
-    final dartVersion = _getDartVersion();
-    final dartCheck = _checkVersion('Dart SDK', dartVersion, minimumDartVersion);
-    results['checks'].add(dartCheck);
-    if (!dartCheck['passed']) {
-      results['meets_requirements'] = false;
+  /// Validates a version component.
+  static void _validateVersionComponent(int value, String name) {
+    if (value < 0) {
+      throw ArgumentError('$name version must be non-negative: $value');
     }
+  }
+  
+  /// Validates a pre-release identifier.
+  static void _validatePreReleaseIdentifier(String identifier) {
+    final parts = identifier.split('.');
     
-    // Check Flutter version if available
-    try {
-      final flutterVersion = _getFlutterVersion();
-      final flutterCheck = _checkVersion('Flutter SDK', flutterVersion, minimumFlutterVersion);
-      results['checks'].add(flutterCheck);
-      if (!flutterCheck['passed']) {
-        results['meets_requirements'] = false;
+    for (final part in parts) {
+      if (part.isEmpty) {
+        throw ArgumentError('Pre-release identifier part cannot be empty');
       }
-    } catch (_) {
-      results['checks'].add({
-        'component': 'Flutter SDK',
-        'passed': false,
-        'found': 'Not available',
-        'required': minimumFlutterVersion,
-        'message': 'Flutter SDK is not available',
-      });
-      results['meets_requirements'] = false;
+      
+      // Check if part contains only alphanumeric characters and hyphens
+      if (!RegExp(r'^[0-9A-Za-z-]+$').hasMatch(part)) {
+        throw ArgumentError(
+          'Pre-release identifier part contains invalid characters: $part',
+        );
+      }
+      
+      // Numeric identifiers must not have leading zeros
+      if (RegExp(r'^\d+$').hasMatch(part)) {
+        if (part.length > 1 && part.startsWith('0')) {
+          throw ArgumentError(
+            'Numeric pre-release identifier cannot have leading zeros: $part',
+          );
+        }
+      }
     }
+  }
+  
+  /// Validates build metadata.
+  static void _validateBuildMetadata(String metadata) {
+    final parts = metadata.split('.');
     
-    // Check WebGL version if in browser
-    if (_isBrowserEnvironment()) {
-      final webglVersion = _getWebGLVersion();
-      final webglCheck = _checkVersion('WebGL', webglVersion, minimumWebGLVersion);
-      results['checks'].add(webglCheck);
-      if (!webglCheck['passed']) {
-        results['meets_requirements'] = false;
+    for (final part in parts) {
+      if (part.isEmpty) {
+        throw ArgumentError('Build metadata part cannot be empty');
+      }
+      
+      // Check if part contains only alphanumeric characters and hyphens
+      if (!RegExp(r'^[0-9A-Za-z-]+$').hasMatch(part)) {
+        throw ArgumentError(
+          'Build metadata part contains invalid characters: $part',
+        );
+      }
+    }
+  }
+  
+  /// Compares pre-release identifiers according to SemVer rules.
+  static int _comparePreRelease(String? a, String? b) {
+    // Stable releases have higher precedence than pre-releases
+    if (a == null && b == null) return 0;
+    if (a == null) return 1; // This is stable, other is pre-release
+    if (b == null) return -1; // This is pre-release, other is stable
+    
+    final aParts = a.split('.');
+    final bParts = b.split('.');
+    
+    final length = math.max(aParts.length, bParts.length);
+    
+    for (var i = 0; i < length; i++) {
+      final aPart = i < aParts.length ? aParts[i] : null;
+      final bPart = i < bParts.length ? bParts[i] : null;
+      
+      // If one identifier has more parts, it has higher precedence
+      if (aPart == null) return -1;
+      if (bPart == null) return 1;
+      
+      final aIsNumeric = RegExp(r'^\d+$').hasMatch(aPart);
+      final bIsNumeric = RegExp(r'^\d+$').hasMatch(bPart);
+      
+      // Numeric identifiers have lower precedence than non-numeric
+      if (aIsNumeric && !bIsNumeric) return -1;
+      if (!aIsNumeric && bIsNumeric) return 1;
+      
+      if (aIsNumeric && bIsNumeric) {
+        final aNum = int.parse(aPart);
+        final bNum = int.parse(bPart);
+        final comparison = aNum.compareTo(bNum);
+        if (comparison != 0) return comparison;
+      } else {
+        final comparison = aPart.compareTo(bPart);
+        if (comparison != 0) return comparison;
       }
     }
     
-    return results;
-  }
-  
-  /// Gets Dart SDK version
-  static String _getDartVersion() {
-    // This would need platform-specific implementation
-    // For now, return a placeholder
-    return '3.0.0';
-  }
-  
-  /// Gets Flutter SDK version
-  static String _getFlutterVersion() {
-    // This would need platform-specific implementation
-    // For now, return a placeholder
-    return '3.10.0';
-  }
-  
-  /// Gets WebGL version
-  static String _getWebGLVersion() {
-    // This would need browser-specific implementation
-    // For now, return a placeholder
-    return '2.0';
-  }
-  
-  /// Checks if running in browser environment
-  static bool _isBrowserEnvironment() {
-    // This would need platform detection
-    // For now, return false
-    return false;
-  }
-  
-  /// Checks version compatibility
-  static Map<String, dynamic> _checkVersion(
-    String component,
-    String found,
-    String required,
-  ) {
-    final passed = _compareVersionStrings(found, required) >= 0;
-    
-    return {
-      'component': component,
-      'passed': passed,
-      'found': found,
-      'required': required,
-      'message': passed 
-          ? '$component version $found meets requirement $required'
-          : '$component version $found does not meet minimum requirement $required',
-    };
-  }
-  
-  /// Compares version strings
-  static int _compareVersionStrings(String a, String b) {
-    final aParts = a.split('.').map(int.parse).toList();
-    final bParts = b.split('.').map(int.parse).toList();
-    
-    for (var i = 0; i < aParts.length && i < bParts.length; i++) {
-      if (aParts[i] != bParts[i]) {
-        return aParts[i] - bParts[i];
-      }
-    }
-    
-    return aParts.length - bParts.length;
+    return 0;
   }
 }
 
-/// Internal class for version range evaluation
-class _VersionRange {
-  final List<_VersionCriterion> criteria;
+/// Represents a version range with inclusive/exclusive bounds.
+class DsrtVersionRange {
+  /// Minimum version (inclusive)
+  final DsrtVersion min;
   
-  _VersionRange(this.criteria);
+  /// Maximum version (inclusive)
+  final DsrtVersion max;
   
-  bool evaluate(DSRTVersion version) {
-    for (final criterion in criteria) {
-      if (!criterion.evaluate(version)) {
-        return false;
+  /// Whether the minimum bound is inclusive
+  final bool minInclusive;
+  
+  /// Whether the maximum bound is inclusive
+  final bool maxInclusive;
+  
+  /// Creates a version range.
+  /// 
+  /// [min]: Minimum version
+  /// [max]: Maximum version
+  /// [minInclusive]: Whether minimum bound is inclusive (default: true)
+  /// [maxInclusive]: Whether maximum bound is inclusive (default: true)
+  /// 
+  /// Throws [ArgumentError] if min > max.
+  DsrtVersionRange({
+    required this.min,
+    required this.max,
+    this.minInclusive = true,
+    this.maxInclusive = true,
+  }) {
+    if (min.compareTo(max) > 0) {
+      throw ArgumentError('Minimum version cannot be greater than maximum version');
+    }
+  }
+  
+  /// Parses a version range string.
+  /// 
+  /// Supported formats:
+  /// - "1.2.3": Exact version
+  /// - "^1.2.3": Compatible with 1.2.3 (>=1.2.3 <2.0.0)
+  /// - "~1.2.3": Approximately equivalent to 1.2.3 (>=1.2.3 <1.3.0)
+  /// - ">=1.2.3 <2.0.0": Explicit range
+  /// - "1.2.3 - 2.0.0": Inclusive range
+  /// 
+  /// [range]: Range specification string
+  /// 
+  /// Returns a DsrtVersionRange instance.
+  /// 
+  /// Throws [FormatException] if the range string is invalid.
+  factory DsrtVersionRange.parse(String range) {
+    if (range.isEmpty) {
+      throw FormatException('Version range cannot be empty');
+    }
+    
+    // Trim whitespace
+    range = range.trim();
+    
+    // Check for exact version
+    if (!range.contains(RegExp(r'[<>=^~\-]'))) {
+      try {
+        final version = DsrtVersion.parse(range);
+        return DsrtVersionRange(
+          min: version,
+          max: version,
+        );
+      } catch (e) {
+        throw FormatException('Invalid version range: $range', range);
       }
     }
+    
+    // Check for caret (^) range
+    if (range.startsWith('^')) {
+      final versionString = range.substring(1);
+      try {
+        final version = DsrtVersion.parse(versionString);
+        return DsrtVersionRange._caretRange(version);
+      } catch (e) {
+        throw FormatException('Invalid caret range: $range', range);
+      }
+    }
+    
+    // Check for tilde (~) range
+    if (range.startsWith('~')) {
+      final versionString = range.substring(1);
+      try {
+        final version = DsrtVersion.parse(versionString);
+        return DsrtVersionRange._tildeRange(version);
+      } catch (e) {
+        throw FormatException('Invalid tilde range: $range', range);
+      }
+    }
+    
+    // Check for hyphen range
+    if (range.contains(' - ')) {
+      final parts = range.split(' - ');
+      if (parts.length != 2) {
+        throw FormatException('Invalid hyphen range format: $range', range);
+      }
+      
+      try {
+        final minVersion = DsrtVersion.parse(parts[0].trim());
+        final maxVersion = DsrtVersion.parse(parts[1].trim());
+        
+        return DsrtVersionRange(
+          min: minVersion,
+          max: maxVersion,
+        );
+      } catch (e) {
+        throw FormatException('Invalid hyphen range: $range', range);
+      }
+    }
+    
+    // Parse as comparison range
+    return _parseComparisonRange(range);
+  }
+  
+  /// Checks if this range contains the specified version.
+  /// 
+  /// [version]: Version to check
+  /// 
+  /// Returns true if the version is within this range.
+  bool contains(DsrtVersion version) {
+    final minComparison = version.compareTo(min);
+    final maxComparison = version.compareTo(max);
+    
+    final satisfiesMin = minInclusive ? minComparison >= 0 : minComparison > 0;
+    final satisfiesMax = maxInclusive ? maxComparison <= 0 : maxComparison < 0;
+    
+    return satisfiesMin && satisfiesMax;
+  }
+  
+  /// Checks if this range intersects with another range.
+  /// 
+  /// [other]: Other range to check
+  /// 
+  /// Returns true if the ranges intersect.
+  bool intersects(DsrtVersionRange other) {
+    // Check if any part of the ranges overlap
+    final thisContainsOtherMin = contains(other.min);
+    final thisContainsOtherMax = contains(other.max);
+    final otherContainsThisMin = other.contains(min);
+    final otherContainsThisMax = other.contains(max);
+    
+    return thisContainsOtherMin ||
+        thisContainsOtherMax ||
+        otherContainsThisMin ||
+        otherContainsThisMax ||
+        (min.compareTo(other.max) == 0 && minInclusive && other.maxInclusive) ||
+        (max.compareTo(other.min) == 0 && maxInclusive && other.minInclusive);
+  }
+  
+  /// Gets the string representation of this range.
+  @override
+  String toString() {
+    final minOperator = minInclusive ? '>=' : '>';
+    final maxOperator = maxInclusive ? '<=' : '<';
+    
+    return '$minOperator $min && $maxOperator $max';
+  }
+  
+  /// Creates a caret (^) range.
+  static DsrtVersionRange _caretRange(DsrtVersion version) {
+    if (version.major > 0) {
+      // ^1.2.3 -> >=1.2.3 <2.0.0
+      return DsrtVersionRange(
+        min: version,
+        max: DsrtVersion(version.major + 1, 0, 0),
+        maxInclusive: false,
+      );
+    } else if (version.minor > 0) {
+      // ^0.2.3 -> >=0.2.3 <0.3.0
+      return DsrtVersionRange(
+        min: version,
+        max: DsrtVersion(0, version.minor + 1, 0),
+        maxInclusive: false,
+      );
+    } else {
+      // ^0.0.3 -> >=0.0.3 <0.0.4
+      return DsrtVersionRange(
+        min: version,
+        max: DsrtVersion(0, 0, version.patch + 1),
+        maxInclusive: false,
+      );
+    }
+  }
+  
+  /// Creates a tilde (~) range.
+  static DsrtVersionRange _tildeRange(DsrtVersion version) {
+    if (version.major > 0) {
+      // ~1.2.3 -> >=1.2.3 <1.3.0
+      return DsrtVersionRange(
+        min: version,
+        max: DsrtVersion(version.major, version.minor + 1, 0),
+        maxInclusive: false,
+      );
+    } else if (version.minor > 0) {
+      // ~0.2.3 -> >=0.2.3 <0.3.0
+      return DsrtVersionRange(
+        min: version,
+        max: DsrtVersion(0, version.minor + 1, 0),
+        maxInclusive: false,
+      );
+    } else {
+      // ~0.0.3 -> >=0.0.3 <0.0.4
+      return DsrtVersionRange(
+        min: version,
+        max: DsrtVersion(0, 0, version.patch + 1),
+        maxInclusive: false,
+      );
+    }
+  }
+  
+  /// Parses a comparison-based range.
+  static DsrtVersionRange _parseComparisonRange(String range) {
+    // Split by && to handle multiple comparisons
+    final parts = range.split('&&').map((p) => p.trim()).toList();
+    
+    DsrtVersion? minVersion;
+    DsrtVersion? maxVersion;
+    bool minInclusive = true;
+    bool maxInclusive = true;
+    
+    for (final part in parts) {
+      if (part.startsWith('>=')) {
+        final versionString = part.substring(2).trim();
+        final version = DsrtVersion.parse(versionString);
+        minVersion = version;
+        minInclusive = true;
+      } else if (part.startsWith('>')) {
+        final versionString = part.substring(1).trim();
+        final version = DsrtVersion.parse(versionString);
+        minVersion = version;
+        minInclusive = false;
+      } else if (part.startsWith('<=')) {
+        final versionString = part.substring(2).trim();
+        final version = DsrtVersion.parse(versionString);
+        maxVersion = version;
+        maxInclusive = true;
+      } else if (part.startsWith('<')) {
+        final versionString = part.substring(1).trim();
+        final version = DsrtVersion.parse(versionString);
+        maxVersion = version;
+        maxInclusive = false;
+      } else if (part.startsWith('=')) {
+        final versionString = part.substring(1).trim();
+        final version = DsrtVersion.parse(versionString);
+        minVersion = version;
+        maxVersion = version;
+        minInclusive = true;
+        maxInclusive = true;
+      } else {
+        throw FormatException('Invalid comparison operator in range: $part', range);
+      }
+    }
+    
+    if (minVersion == null && maxVersion == null) {
+      throw FormatException('No valid version constraints found in range: $range', range);
+    }
+    
+    minVersion ??= DsrtVersion(0, 0, 0);
+    maxVersion ??= DsrtVersion(999, 999, 999);
+    
+    return DsrtVersionRange(
+      min: minVersion,
+      max: maxVersion,
+      minInclusive: minInclusive,
+      maxInclusive: maxInclusive,
+    );
+  }
+}
+
+/// Version information for a specific engine component.
+class DsrtComponentVersion {
+  /// Component name
+  final String name;
+  
+  /// Component version
+  final DsrtVersion version;
+  
+  /// Component description
+  final String description;
+  
+  /// Component dependencies
+  final Map<String, DsrtVersionRange> dependencies;
+  
+  /// Creates component version information.
+  DsrtComponentVersion({
+    required this.name,
+    required this.version,
+    required this.description,
+    this.dependencies = const {},
+  });
+  
+  /// Checks if this component is compatible with another component version.
+  /// 
+  /// [other]: Other component version to check
+  /// 
+  /// Returns true if components are compatible.
+  bool isCompatibleWith(DsrtComponentVersion other) {
+    // Check if other component is a dependency
+    final dependencyRange = dependencies[other.name];
+    if (dependencyRange != null) {
+      return dependencyRange.contains(other.version);
+    }
+    
     return true;
   }
+  
+  /// Gets the string representation.
+  @override
+  String toString() {
+    return '$name $version';
+  }
 }
 
-/// Internal class for version criteria
-class _VersionCriterion {
-  final _CriterionType type;
-  final DSRTVersion version;
+/// Manages engine-wide version information and compatibility.
+class DsrtVersionManager {
+  /// Engine core version
+  final DsrtComponentVersion engineCore;
   
-  _VersionCriterion(this.type, this.version);
+  /// Registered component versions
+  final Map<String, DsrtComponentVersion> _components;
   
-  factory _VersionCriterion.caret(DSRTVersion version) {
-    return _VersionCriterion(_CriterionType.caret, version);
-  }
+  /// Creates a version manager.
+  DsrtVersionManager({required this.engineCore})
+      : _components = {'core': engineCore};
   
-  factory _VersionCriterion.tilde(DSRTVersion version) {
-    return _VersionCriterion(_CriterionType.tilde, version);
-  }
-  
-  factory _VersionCriterion.greaterThan(DSRTVersion version) {
-    return _VersionCriterion(_CriterionType.greaterThan, version);
-  }
-  
-  factory _VersionCriterion.lessThan(DSRTVersion version) {
-    return _VersionCriterion(_CriterionType.lessThan, version);
-  }
-  
-  factory _VersionCriterion.greaterThanOrEqual(DSRTVersion version) {
-    return _VersionCriterion(_CriterionType.greaterThanOrEqual, version);
-  }
-  
-  factory _VersionCriterion.lessThanOrEqual(DSRTVersion version) {
-    return _VersionCriterion(_CriterionType.lessThanOrEqual, version);
-  }
-  
-  factory _VersionCriterion.equal(DSRTVersion version) {
-    return _VersionCriterion(_CriterionType.equal, version);
-  }
-  
-  bool evaluate(DSRTVersion other) {
-    switch (type) {
-      case _CriterionType.caret:
-        // ^1.2.3 means >=1.2.3 <2.0.0
-        return !other.isOlderThan(version) && other.major == version.major;
-      case _CriterionType.tilde:
-        // ~1.2.3 means >=1.2.3 <1.3.0
-        return !other.isOlderThan(version) && 
-               other.major == version.major &&
-               other.minor == version.minor;
-      case _CriterionType.greaterThan:
-        return other.isNewerThan(version);
-      case _CriterionType.lessThan:
-        return other.isOlderThan(version);
-      case _CriterionType.greaterThanOrEqual:
-        return !other.isOlderThan(version);
-      case _CriterionType.lessThanOrEqual:
-        return !other.isNewerThan(version);
-      case _CriterionType.equal:
-        return other.isEqualTo(version);
+  /// Registers a component version.
+  /// 
+  /// [component]: Component version to register
+  /// 
+  /// Throws [StateError] if component with same name already registered.
+  void registerComponent(DsrtComponentVersion component) {
+    if (_components.containsKey(component.name)) {
+      throw StateError('Component "${component.name}" is already registered');
     }
+    
+    // Check dependencies
+    for (final entry in component.dependencies.entries) {
+      final dependencyName = entry.key;
+      final dependencyRange = entry.value;
+      
+      final dependencyVersion = _components[dependencyName];
+      if (dependencyVersion == null) {
+        throw StateError(
+          'Dependency "$dependencyName" not found for component "${component.name}"',
+        );
+      }
+      
+      if (!dependencyRange.contains(dependencyVersion.version)) {
+        throw StateError(
+          'Component "${component.name}" requires $dependencyName $dependencyRange '
+          'but found $dependencyVersion',
+        );
+      }
+    }
+    
+    _components[component.name] = component;
   }
+  
+  /// Gets a component version by name.
+  /// 
+  /// [name]: Component name
+  /// 
+  /// Returns the component version or null if not found.
+  DsrtComponentVersion? getComponent(String name) {
+    return _components[name];
+  }
+  
+  /// Checks if all registered components are compatible with each other.
+  /// 
+  /// Returns a list of compatibility issues, empty if all compatible.
+  List<String> checkCompatibility() {
+    final issues = <String>[];
+    
+    for (final component in _components.values) {
+      for (final entry in component.dependencies.entries) {
+        final dependencyName = entry.key;
+        final dependencyRange = entry.value;
+        
+        final dependency = _components[dependencyName];
+        if (dependency == null) {
+          issues.add(
+            'Component "${component.name}" depends on "$dependencyName" which is not registered',
+          );
+          continue;
+        }
+        
+        if (!dependencyRange.contains(dependency.version)) {
+          issues.add(
+            'Component "${component.name}" requires $dependencyName $dependencyRange '
+            'but found $dependency',
+          );
+        }
+      }
+    }
+    
+    return issues;
+  }
+  
+  /// Gets the version information as a formatted string.
+  String getVersionInfo() {
+    final buffer = StringBuffer();
+    buffer.writeln('DSRT Engine Version Information');
+    buffer.writeln('=' * 50);
+    
+    for (final component in _components.values) {
+      buffer.write('• ${component.name}: ${component.version}');
+      if (component.description.isNotEmpty) {
+        buffer.write(' - ${component.description}');
+      }
+      buffer.writeln();
+      
+      if (component.dependencies.isNotEmpty) {
+        buffer.writeln('  Dependencies:');
+        for (final entry in component.dependencies.entries) {
+          buffer.writeln('    - ${entry.key}: ${entry.value}');
+        }
+      }
+    }
+    
+    final compatibilityIssues = checkCompatibility();
+    if (compatibilityIssues.isNotEmpty) {
+      buffer.writeln();
+      buffer.writeln('Compatibility Issues:');
+      for (final issue in compatibilityIssues) {
+        buffer.writeln('  ⚠ $issue');
+      }
+    }
+    
+    return buffer.toString();
+  }
+  
+  /// Gets all registered component names.
+  List<String> get componentNames => _components.keys.toList();
+  
+  /// Gets all registered component versions.
+  List<DsrtComponentVersion> get components => _components.values.toList();
 }
 
-/// Internal enum for criterion types
-enum _CriterionType {
-  caret,
-  tilde,
-  greaterThan,
-  lessThan,
-  greaterThanOrEqual,
-  lessThanOrEqual,
-  equal,
+/// Current engine version constants
+class DsrtCurrentVersions {
+  /// Current engine version
+  static final DsrtVersion engine = DsrtVersion.parse('1.0.0');
+  
+  /// Current core version
+  static final DsrtComponentVersion core = DsrtComponentVersion(
+    name: 'core',
+    version: engine,
+    description: 'DSRT Engine Core Module',
+  );
+  
+  /// Current foundation version
+  static final DsrtComponentVersion foundation = DsrtComponentVersion(
+    name: 'foundation',
+    version: DsrtVersion.parse('1.0.0'),
+    description: 'DSRT Engine Foundation Module',
+    dependencies: {
+      'core': DsrtVersionRange.parse('^1.0.0'),
+    },
+  );
+  
+  /// Current implementation version
+  static final DsrtComponentVersion implementation = DsrtComponentVersion(
+    name: 'implementation',
+    version: DsrtVersion.parse('1.0.0'),
+    description: 'DSRT Engine Implementation Module',
+    dependencies: {
+      'foundation': DsrtVersionRange.parse('^1.0.0'),
+    },
+  );
+  
+  /// Current systems version
+  static final DsrtComponentVersion systems = DsrtComponentVersion(
+    name: 'systems',
+    version: DsrtVersion.parse('1.0.0'),
+    description: 'DSRT Engine Systems Module',
+    dependencies: {
+      'implementation': DsrtVersionRange.parse('^1.0.0'),
+    },
+  );
+  
+  /// Current extensions version
+  static final DsrtComponentVersion extensions = DsrtComponentVersion(
+    name: 'extensions',
+    version: DsrtVersion.parse('1.0.0'),
+    description: 'DSRT Engine Extensions Module',
+    dependencies: {
+      'systems': DsrtVersionRange.parse('^1.0.0'),
+    },
+  );
+  
+  /// Creates a version manager with all current versions.
+  static DsrtVersionManager createVersionManager() {
+    final manager = DsrtVersionManager(engineCore: core);
+    
+    manager.registerComponent(foundation);
+    manager.registerComponent(implementation);
+    manager.registerComponent(systems);
+    manager.registerComponent(extensions);
+    
+    return manager;
+  }
 }
